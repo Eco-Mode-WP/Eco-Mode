@@ -1,1 +1,17 @@
-/vendor/
+idea/
+
+# Javascript
+node_modules/
+dist
+build
+
+# Dotenv
+.env
+.env.*
+!.env.example
+
+# Local
+sql/
+
+# Composer
+vendor/

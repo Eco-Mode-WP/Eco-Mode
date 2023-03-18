@@ -6,6 +6,7 @@
  * Version:      0.1.0
  * Description:  A Cloudfest Hackathon project.
  * Author:       Multiple
+ * Text Domain:  eco-mode
  * Requires PHP: 7.4
  */
 
@@ -21,6 +22,13 @@ $ecomode_blog_autoloader = __DIR__ . '/vendor/autoload.php';
 if ( is_readable( $ecomode_blog_autoloader ) ) {
 	require_once $ecomode_blog_autoloader;
 }
+
+define( 'ECO_MODE_VERSION', '0.1.0' );
+define( 'ECO_MODE_DIR_PATH', plugin_dir_path( __FILE__ ) );
+define( 'ECO_MODE_DIR_URL', esc_url( plugin_dir_url( __FILE__ ) ) );
+
+/* Load Settings */
+require_once __DIR__ . '/includes/settings/settings.php';
 
 /**
  * Inits the plugin and registers required actions and filters.
