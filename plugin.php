@@ -45,5 +45,15 @@ function init(): void {
 	add_action( 'plugins_loaded', [ Dummy::class, 'dummy' ] );
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 }
-
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
+
+add_action(
+	'plugins_loaded',
+	function () {
+		Reschedule::add('wp_https_detection', 'daily');
+	},
+	0
+);
+add_action( 'plugins_loaded', [ Reschedule::class, 'add_filter' ], 1 );
+
+// TODO: call Reschedule::clear_all() on the right time to clear the registered hooks.
