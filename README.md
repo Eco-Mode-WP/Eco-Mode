@@ -3,7 +3,7 @@ Repo for the Eco-Mode project: https://www.cloudfest.com/eco-mode-reduce-outgoin
 
 ## Setup
 
-Run `composer install` to generete the autoloader.
+Run `composer install` to generate the autoloader.
 
 ## Reschedule
 
