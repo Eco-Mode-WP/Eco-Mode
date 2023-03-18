@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page
+ * Settings page fields
  *
  * @package Eco-Mode
  */
