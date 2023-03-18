@@ -1,8 +1,4 @@
-#PhpStorm
-idea/
-
-# Javascript
-node_modules/
-
-# Composer
-vendor/
+/vendor/
+.idea
+/node_modules/
+.DS_Store
