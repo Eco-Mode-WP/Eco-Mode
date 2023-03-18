@@ -1,0 +1,17 @@
+{
+    "name": "eco-mode/eco-mode",
+    "description": "Eco Mode WP",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "classmap": [
+            "includes/"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Christoph Daum",
+            "email": "christoph.daum@ionos.com"
+        }
+    ]
+}
