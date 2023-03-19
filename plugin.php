@@ -47,8 +47,8 @@ function init(): void {
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 
 	$throttler = new RequestThrottler( [
-		new ThrottledRequest( 'https://planet.wordpress.org/feed/', 'GET' , \WEEK_IN_SECONDS ),
-		new ThrottledRequest( 'https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam', 'GET', \MINUTE_IN_SECONDS ),
+		new ThrottledRequest( 'https://planet.wordpress.org/feed/', \WEEK_IN_SECONDS , 'GET' ),
+		new ThrottledRequest( 'https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam', \MINUTE_IN_SECONDS, 'GET' ),
 	] );
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
