@@ -15,7 +15,46 @@ class OutgoingRequests {
 
 	public static function register_post_type() {
 		\register_post_type( self::POST_TYPE,
-			[ 'supports' => [ 'title' ] ] );
+			[ 'supports' => [ 'title' , 'custom-fields' ],
+				'show_in_rest' => true,
+				'public'       => true,
+			]
+		);
+		\register_meta(
+			'post',
+			'is_enabled',
+			[
+				'type'         => 'boolean',
+				'description'  => 'Throttling is enabled',
+				'single'       => true,
+				'default'      => false,
+				'show_in_rest' => true,
+			]
+		);
+		\register_meta(
+			'post',
+			'max_frequency_in_seconds',
+			[
+				'type'              => 'integer',
+				'single'            => true,
+				'default'           => 9999,
+				'sanitize_callback' => 'absint',
+				'show_in_rest'      => true,
+			]
+		);
+	}
+
+	public static function get_data(): array {
+		$request_posts = get_posts( [ 'post_type' => self::POST_TYPE, 'posts_per_page'=>15 ] );
+
+		return array_map( function ( $request_post ) {
+			$response_data            = (array) $request_post;
+			$response_data['history'] = \get_post_meta( $request_post->ID, 'request_data', false );
+			$response_data['is_enabled'] = \get_post_meta( $request_post->ID, 'is_enabled', true );
+			$response_data['max_frequency_in_seconds'] = \get_post_meta( $request_post->ID, 'max_frequency_in_seconds', true );
+
+			return $response_data;
+		}, $request_posts );
 	}
 
     public function start_request_timer( $args ) {
@@ -105,5 +144,4 @@ class OutgoingRequests {
 
 		return $existing_posts[0];
 	}
-
 }
