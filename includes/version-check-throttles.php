@@ -6,19 +6,28 @@ namespace EcoMode\EcoModeWP;
  */
 class Version_Check_Throttles {
 	const OPTION_NAME = 'version_check';
+	const REQUEST_URL = 'https://api.wordpress.org/core/version-check/';
+	const SCHEDULED_ACTION = 'wp_version_check';
 
 	/**
 	 * Initializer for throttles of wp_version_check.
 	 */
 	public static function init(): void {
 		if ( ! self::is_file_mod_allowed() ) {
-			$throttled_frequency = self::stop_scheduled_action( 'wp_version_check' );
+			// @TODO: replace self::stop_scheduled_action when we have the implementation for rescheduling/unscheduling ready.
+			$throttled_frequency = self::stop_scheduled_action( self::SCHEDULED_ACTION );
 			if ( ! $throttled_frequency ) {
 				return;
 			}
 
+			$throttle_info = [
+				'scheduled_action'   => self::SCHEDULED_ACTION,
+				'prevented_requests' => self::frequency_to_requests_per_day( $throttled_frequency ),
+				'request_url'        => self::REQUEST_URL,
+			];
+
 			$prevented_requests = get_site_option( 'eco_mode_prevented_requests' );
-			$prevented_requests[ self::OPTION_NAME ] = self::frequency_to_requests_per_day( $throttled_frequency );
+			$prevented_requests[ self::OPTION_NAME ] = $throttle_info;
 			update_site_option( 'eco_mode_prevented_requests', $prevented_requests );
 		}
 	}
