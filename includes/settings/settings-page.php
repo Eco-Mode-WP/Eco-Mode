@@ -9,6 +9,8 @@ declare( strict_types=1 );
 
 namespace EcoMode\Settings\Page;
 
+use function EcoMode\Settings\Fields\get_custom_eco_mode_data;
+
 add_action( 'admin_menu', __NAMESPACE__ . '\\add_settings_page', 9 );
 
 /**
@@ -49,7 +51,7 @@ function settings_assets(): void {
 	 * Make settings available to the settings page
 	 */
 	\wp_localize_script( 'eco-mode-plugin-script', 'EcoModeSettings',
-		[]
+		get_custom_eco_mode_data()
 	);
 }
 

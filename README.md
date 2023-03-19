@@ -12,13 +12,13 @@ Run `composer install` to generate the autoloader.
 To reschedule a scheduled event, just call the following line, and replace 'daily' with your desired recurrence. This is an open API and can be used at you.
 This needs to be called prior to the actual register hook.
 
-```\EcoMode\EcoModeWP\Reschedule::add( 'action_name', 'daily' )```
+```\EcoMode\EcoModeWP\Alter_Schedule::reschedule( 'action_name', 'daily' )```
 
 ```
 add_action(
 	'plugins_loaded',
 	function () {
-		\EcoMode\EcoModeWP\Reschedule::add('wp_https_detection', 'daily');
+		\EcoMode\EcoModeWP\Alter_Schedule::reschedule( 'wp_https_detection', 'daily' );
 	},
 	0
 );
