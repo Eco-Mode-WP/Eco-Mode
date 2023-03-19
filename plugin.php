@@ -65,11 +65,12 @@ add_action( 'init', __NAMESPACE__ . '\init', 0 );
 add_action(
 	'plugins_loaded',
 	function () {
-		Reschedule::add('wp_https_detection', 'daily');
+		Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 3:00' ] );
 	},
 	0
 );
-add_action( 'plugins_loaded', [ Reschedule::class, 'add_filter' ], 1 );
+add_action( 'plugins_loaded', [ Alter_Schedule::class, 'filter_add_events' ], 2 );
+add_filter( 'pre_get_scheduled_event', [ Alter_Schedule::clear_all(), 'filter_add_events' ], 99, 4 );
 
 // TODO: call Reschedule::clear_all() on the right time to clear the registered hooks.
 
