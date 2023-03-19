@@ -74,6 +74,7 @@ add_action( 'plugins_loaded', [ Reschedule::class, 'add_filter' ], 1 );
 // TODO: call Reschedule::clear_all() on the right time to clear the registered hooks.
 
 
+// TODO: Remove this hook; it's only for generating some test data
 add_action( 'dashboard_glance_items', function () {
 	$res  = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam" );
 	$res2 = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam", [ 'body' => [ 3 ] ] );
