@@ -1,0 +1,21 @@
+:root{
+    /* Colors */
+    --border-color: #cbd5e1;
+
+    /* Spacing */
+    --spacing: 1rem;
+}
+
+.eco-mode-filter {
+    display: flex;
+    align-items: center;
+    padding-block: var(--spacing);
+    gap: calc(var(--spacing) / 2);
+
+        input[type="button"] {
+            display: block;
+            padding: calc(var(--spacing) / 2) var(--spacing);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--spacing) / 2);
+        }
+}
