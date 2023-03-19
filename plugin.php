@@ -49,8 +49,6 @@ function init(): void {
     add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
     add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 
-	add_action( 'schedule_event', [ Alter_Schedule::class, 'filter_add_events' ], 2 );
-	add_filter( 'pre_get_scheduled_event', [ Alter_Schedule::class, 'filter_get_scheduled' ], 99, 4 );
 
 	/**
 	 * Allows the user to fully customize the Eco Mode, by replacing the mode function by a plugin of your own.
@@ -80,7 +78,7 @@ function normal_mode() {
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
 	add_action( 'init', [ DailySavings::class, 'register_post_type' ] );
 
-	Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 16:00' ] );
+	// Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 16:00' ] );
   $outgoing_requests = new OutgoingRequests();
 	add_action( 'init', [ $outgoing_requests, 'register_post_type' ] );
 	add_filter( 'http_request_args', [ $outgoing_requests, 'start_request_timer' ] );

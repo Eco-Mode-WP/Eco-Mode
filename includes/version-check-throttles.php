@@ -25,6 +25,7 @@ class Version_Check_Throttles {
     }
 
 	private static function is_wp_outdated() {
+		// return false;
 		$current = get_site_transient( 'update_core' );
 
 		if ( ! isset( $current->updates ) || ! is_array( $current->updates ) ) {
