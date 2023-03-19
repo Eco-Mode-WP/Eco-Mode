@@ -53,8 +53,12 @@ class RequestThrottler {
 		$cache = \get_transient( $this->get_cache_key( $throttled_request, $parsed_args ) );
 
 		if ( ! $cache ) {
+			DailySavings::track_outgoing_request( $throttled_request );
+
 			return $response;
 		}
+
+		DailySavings::track_prevented_request( $throttled_request );
 
 		return $cache;
 	}

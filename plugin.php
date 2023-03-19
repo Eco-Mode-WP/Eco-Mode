@@ -51,6 +51,7 @@ function init(): void {
 	] );
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
+	add_action( 'init', [ DailySavings::class, 'register_post_type' ] );
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
