@@ -47,8 +47,13 @@ function init(): void {
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 
 	$throttler = new RequestThrottler( [
-		new ThrottledRequest( 'https://planet.wordpress.org/feed/', \WEEK_IN_SECONDS , 'GET' ),
-		new ThrottledRequest( 'https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam', \MINUTE_IN_SECONDS, 'GET' ),
+
+		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
+		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
+
+		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months
+		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
+
 	] );
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
