@@ -12,7 +12,7 @@ import EcoModePerDayChart from "./components/EcoModePerDayChart";
 import EcoModePerMonthChart from "./components/EcoModePerMonthChart";
 
 const Settings = () => {
-	const [ timeSpanFilter, setTimeSpanFilter ] = useState('perWeek');
+	const [ timeSpanFilter, setTimeSpanFilter ] = useState('perDay');
 
 	const handleFilter = useCallback( (event) => {
 		setTimeSpanFilter( event.target.value );
@@ -26,18 +26,30 @@ const Settings = () => {
 
 	return (
 		<>
-			<div className="eco-mode-filter">
+			<div className="eco-mode__filter">
 				<span>Filter:</span>
-				<input type="button" value="perWeek" onClick={ () => handleFilter(event) } />
-				<input type="button" value="perMonth" onClick={ () => handleFilter(event) } />
+				<input type="button" value="perDay" onClick={ (event) => handleFilter(event) } />
+				<input type="button" value="perMonth" onClick={ (event) => handleFilter(event) } />
 			</div>
 
 			<PanelBody initialOpen={true} title={__('WP version check')}>
-				{
-					timeSpanFilter === 'perWeek'
-						? <EcoModePerDayChart />
-						: <EcoModePerMonthChart />
-				}
+				<div className="eco-mode__chart-wrapper">
+					<div className="eco-mode__chart-panel">
+						{
+							timeSpanFilter === 'perDay'
+								? <EcoModePerDayChart />
+								: <EcoModePerMonthChart />
+						}
+					</div>
+					<div className="eco-mode__chart-text">
+						<h2>WP version check</h2>
+						<p>An 'extremely credible source' has called my office and told me that Lorem Ipsum's birth certificate is a fraud. I’m the best thing that ever happened to placeholder text.</p>
+						<ul>
+							<li><strong>Prevented CO2 emission</strong>: 123gr</li>
+							<li><strong>Saved glacier amount</strong>: 0.003t</li>
+						</ul>
+					</div>
+				</div>
 			</PanelBody>
 		</>
 	);

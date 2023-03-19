@@ -30,10 +30,10 @@ export const options = {
 		legend: {
 			position: 'top',
 		},
-		title: {
-			display: true,
-			text: 'WP version check',
-		},
+		// title: {
+		// 	display: true,
+		// 	text: 'WP version check',
+		// },
 	},
 };
 
