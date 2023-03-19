@@ -75,8 +75,6 @@ jobs:
                 run: |
                     composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
                     echo "vendor/bin" >> $GITHUB_PATH
-            -   name: Log PHPCS debug information
-                run: vendor/bin/phpcs -i
 
             -   name: 📂 Sync files to eco-mode.confstack.com
                 if: ${{ github.ref == 'refs/heads/stage' }}
