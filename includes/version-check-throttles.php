@@ -5,7 +5,6 @@ namespace EcoMode\EcoModeWP;
  * Handles throttles for wp_version_check.
  */
 class Version_Check_Throttles {
-	const OPTION_NAME      = 'version_check';
 	const THROTTLER_NAME   = 'file_mods';
 	const REQUEST_URL      = 'https://api.wordpress.org/core/version-check/';
 	const SCHEDULED_ACTION = 'wp_version_check';
@@ -30,11 +29,14 @@ class Version_Check_Throttles {
 			];
 
 			$prevented_requests = get_site_option( 'eco_mode_prevented_requests' );
-			$prevented_requests[ self::OPTION_NAME ][ self::THROTTLER_NAME ] = $throttle_info;
+			$prevented_requests[ self::THROTTLER_NAME ] = $throttle_info;
 			update_site_option( 'eco_mode_prevented_requests', $prevented_requests );
 		} else {
 			$prevented_requests = get_site_option( 'eco_mode_prevented_requests' );
-			unset( $prevented_requests[ self::OPTION_NAME ][ self::THROTTLER_NAME ] );
+			if ( isset( $prevented_requests[ self::THROTTLER_NAME ] ) ) {
+				unset( $prevented_requests[ self::THROTTLER_NAME ] );
+				update_site_option( 'eco_mode_prevented_requests', $prevented_requests );
+			}
 		}
 	}
 
