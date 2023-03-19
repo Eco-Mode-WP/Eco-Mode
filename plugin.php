@@ -66,13 +66,13 @@ function init(): void {
 	add_action( 'init', [ $outgoing_requests, 'register_post_type' ] );
 	add_filter( 'http_request_args', [ $outgoing_requests, 'start_request_timer' ] );
     add_action( 'http_api_debug', [ $outgoing_requests, 'capture_request' ], 10, 5 );
+
+	Alter_Schedule::reschedule('wp_https_detection', 'daily' );
+	//Alter_Schedule::disable( 'wp_https_detection' );
+	Alter_Schedule::update();
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
-
-Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 16:00' ] );
-//Alter_Schedule::disable( 'wp_https_detection' );
-//Alter_Schedule::clear_all();
 
 // TODO: Remove this hook; it's only for generating some test data
 add_action( 'dashboard_glance_items', function () {

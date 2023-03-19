@@ -22,24 +22,13 @@ class Alter_Schedule {
 	/**
 	 * Registers a reschedule for a certain hook.
 	 *
-	 * @see strtotime()
-	 *
-	 * @param string $action The name of the action to reschedule.
-	 * @param array $args {
-	 *     An object containing an event's data, or boolean false to prevent the event from being scheduled.
-	 *
-	 *     @type string $recurrence     The recurrence, like 'daily', 'hourly' etc.
-	 *     @type string $start          A strtotime() compatible string which defines when it shall be excecuted for the first time. Optional
-	 * }
+	 * @param string $action    The name of the action to reschedule.
+	 * @param string $recurrence The recurrence, like 'daily', 'hourly' etc.
 	 *
 	 * @return bool
 	 */
-	public static function reschedule(string $action, array $args ): bool {
-		if ( empty( $args['recurrence'] ) ) {
-			return false;
-		}
-
-		self::$rescheduled_hooks[ $action ] = $args;
+	public static function reschedule(string $action, string $recurrence ): bool {
+		self::$rescheduled_hooks[ $action ] = $recurrence;
 
 		return ! empty( self::$rescheduled_hooks[ $action ] );
 	}
@@ -61,18 +50,36 @@ class Alter_Schedule {
 	}
 
 	/**
-	 * Removes all registered hooks.
+	 * Updates all changed hooks.
 	 *
 	 * @return bool
 	 */
-	public static function clear_all(): bool {
-		foreach ( self::$rescheduled_hooks as $action => $recurrence ) {
+	public static function update(): bool {
+		$last_schedules = (array) get_option( 'eco_mode_wp_last_schedules', [] );
+
+		if ( empty( $last_schedules ) ) {
+			$delta['rescheduled_hooks'] = self::$rescheduled_hooks;
+			$delta['disabled_hooks'] = self::$disabled_hooks;
+		} else {
+			$delta['rescheduled_hooks'] = array_merge(
+				array_diff_assoc( $last_schedules['rescheduled_hooks'], self::$rescheduled_hooks ),
+				array_diff_assoc( self::$rescheduled_hooks, $last_schedules['rescheduled_hooks'] )
+			);
+			$delta['disabled_hooks'] = array_diff( $last_schedules['disabled_hooks'], self::$disabled_hooks );
+		}
+
+		foreach ( $delta['rescheduled_hooks'] as $action => $recurrence ) {
 			wp_clear_scheduled_hook( $action );
 		}
 
-		foreach ( self::$disabled_hooks as $action ) {
+		foreach ( $delta['disabled_hooks'] as $action ) {
 			wp_clear_scheduled_hook( $action );
 		}
+
+		$schedules['rescheduled_hooks'] = self::$rescheduled_hooks;
+		$schedules['disabled_hooks'] = self::$disabled_hooks;
+
+		update_option( 'eco_mode_wp_last_schedules', $schedules );
 
 		return true;
 	}
@@ -103,42 +110,11 @@ class Alter_Schedule {
 
 		// Reschedule.
 		if ( isset( self::$rescheduled_hooks[ $event->hook ] ) ) {
-			self::ping_altered_schedule( $event, self::$rescheduled_hooks[ $event->hook ]['recurrence'] );
-			$event->schedule = self::$rescheduled_hooks[ $event->hook ]['recurrence'];
-
-			if ( isset( self::$rescheduled_hooks[ $event->hook ]['start'] ) && is_string( self::$rescheduled_hooks[ $event->hook ]['start'] ) ) {
-				$new_start = strtotime( self::$rescheduled_hooks[ $event->hook ]['start'] );
-				if ( is_int( $new_start ) && $new_start > 0 ) {
-					$event->timestamp = $new_start;
-				}
-			}
+			self::ping_altered_schedule( $event, self::$rescheduled_hooks[ $event->hook ] );
+			$event->schedule = self::$rescheduled_hooks[ $event->hook ];
 		}
 
 		return $event;
-	}
-
-	/**
-	 * Injects a fake result for even schedule for disabled events.
-	 *
-	 * @param null|false|object $pre  Value to return instead. Default null to continue retrieving the event.
-	 * @param string            $hook Action hook of the event.
-	 * @param array             $args Array containing each separate argument to pass to the hook's callback function.
-	 *                                Although not passed to a callback, these arguments are used to uniquely identify
-	 *                                the event.
-	 * @param int|null  $timestamp Unix timestamp (UTC) of the event. Null to retrieve next scheduled event.
-	 *
-	 * @return \stdClass
-	 */
-	public static function filter_get_scheduled( $pre, string $hook, array $args, ?int $timestamp ) {
-		if ( in_array( $hook, self::$disabled_hooks, true ) ) {
-			$pre = new \stdClass();
-			$pre->hook = $hook;
-			$pre->schedule = false;
-			$pre->args = $args;
-			$pre->timestamp = PHP_INT_MAX;
-		}
-
-		return $pre;
 	}
 
 	/**
@@ -157,7 +133,7 @@ class Alter_Schedule {
 	 */
 	private static function ping_altered_schedule( $event, string $new_recurrence ): void {
 		/**
-		 * Notifies about the altering of an event..
+		 * Notifies about the altering of an event.
 		 *
 		 * @param \stdClass|false $event {
 		 *     An object containing an event's data, or boolean false to prevent the event from being scheduled.
