@@ -35,12 +35,46 @@ function register_plugin_settings(): void {
  * @return array
  */
 function get_custom_eco_mode_data(): array {
-	$data = [];
+	// Setup data array.
+	$data = ['custom_eco_mode_data' => [], 'daily_savings' => []];
 
+	// Get prevented requests data.
 	$eco_mode_data = get_option( 'eco_mode_prevented_requests' );
-	if ( ! $eco_mode_data ) {
+	if ( $eco_mode_data ) {
 		$data['custom_eco_mode_data'] = $eco_mode_data;
 	}
+
+	// Get daily savings data.
+	/**
+	 * Create a query to get the daily saving data from the post type
+	 */
+	$args = [
+		'post_type'      => 'EM-daily-savings',
+		'posts_per_page' => 1,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	];
+
+	$the_query = new \WP_Query( $args );
+
+	if ( $the_query->have_posts() ) {
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$id = get_the_ID();
+
+			// return full daya for the day.
+			$data['daily_savings'][] = [
+				'title'              => get_the_title(),
+				'date'               => get_the_date(),
+				'prevented_requests' => get_post_meta( $id, 'total_prevent_requests', true ),
+				'outgoing_requests'  => get_post_meta( $id, 'total_outgoing_requests', true ),
+			];
+
+		}
+	} else {
+		// no posts found
+	}
+
 	return $data;
 }
 
