@@ -61,6 +61,11 @@ function init(): void {
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
 	add_action( 'init', [ DailySavings::class, 'register_post_type' ] );
+
+	$outgoing_requests = new OutgoingRequests();
+	add_action( 'init', [ $outgoing_requests, 'register_post_type' ] );
+	add_filter( 'http_request_args', [ $outgoing_requests, 'start_request_timer' ] );
+    add_action( 'http_api_debug', [ $outgoing_requests, 'capture_request' ], 10, 5 );
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
@@ -74,4 +79,3 @@ add_action( 'dashboard_glance_items', function () {
 	$res  = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam" );
 	$res2 = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam", [ 'body' => [ 3 ] ] );
 } );
-
