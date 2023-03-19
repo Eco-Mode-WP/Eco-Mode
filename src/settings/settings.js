@@ -10,6 +10,7 @@ import { render, useState, useCallback } from '@wordpress/element';
 import useEcoModeData from './components/data';
 import EcoModePerDayChart from "./components/EcoModePerDayChart";
 import EcoModePerMonthChart from "./components/EcoModePerMonthChart";
+import RequestList from "./components/RequestList";
 
 const Settings = () => {
 	const [ timeSpanFilter, setTimeSpanFilter ] = useState('perDay');
@@ -50,6 +51,9 @@ const Settings = () => {
 						</ul>
 					</div>
 				</div>
+			</PanelBody>
+			<PanelBody>
+				<RequestList requests={ecoModeData.requests}/>
 			</PanelBody>
 		</>
 	);
