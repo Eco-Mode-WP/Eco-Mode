@@ -35,6 +35,7 @@ function init(): void {
 	 */
 
 	add_action( 'plugins_loaded', [ Dummy::class, 'dummy' ] );
+	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
