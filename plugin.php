@@ -57,6 +57,7 @@ function init(): void {
 	] );
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
+	add_action( 'init', [ DailySavings::class, 'register_post_type' ] );
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
@@ -71,3 +72,9 @@ add_action(
 add_action( 'plugins_loaded', [ Reschedule::class, 'add_filter' ], 1 );
 
 // TODO: call Reschedule::clear_all() on the right time to clear the registered hooks.
+
+
+add_action( 'dashboard_glance_items', function () {
+	$res  = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam" );
+	$res2 = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam", [ 'body' => [ 3 ] ] );
+} );
