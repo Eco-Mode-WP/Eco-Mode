@@ -1,0 +1,119 @@
+name: CI/CD
+
+on:
+    push:
+        branches: [ add-deployer ]
+    pull_request:
+        branches: [ add-deployer ]
+        paths:
+            - '**.css'
+            - '**.js'
+            - '**.php'
+            - 'composer.lock'
+            - '**.json'
+            - '**.yml'
+
+    # Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+    # The concurrency group contains the workflow name and the branch name for pull requests
+    # or the commit hash for any other events.
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node: [ 19.1.x ]
+                php: [ 8.0 ]
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v3
+
+            -   name: Cache node modules
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        **/node_modules
+                    key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+            -   name: Set up Node.js ${{ matrix.node }}
+                uses: actions/setup-node@v3
+                with:
+                    node-version: ${{ matrix.node }}
+
+            -   name: Install dependencies Plugin
+                run: npm install
+
+            -   name: Build Plugin
+                run: npm run build
+
+            -   name: Set up Composer caching
+                uses: actions/cache@v3
+                env:
+                    cache-name: cache-composer-dependencies
+                with:
+                    path: /tmp/composer-cache
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                    restore-keys: |
+                        ${{ runner.os }}-composer-
+            -   name: Set up PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: none
+                    tools: composer, cs2pr
+
+            -   name: Log debug information
+                run: |
+                    php --version
+                    composer --version
+            -   name: Install Composer dependencies
+                run: |
+                    composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
+                    echo "vendor/bin" >> $GITHUB_PATH
+            -   name: Log PHPCS debug information
+                run: vendor/bin/phpcs -i
+
+            -   name: 📂 Sync files to eco-mode.confstack.com
+                if: ${{ github.ref == 'refs/heads/stage' }}
+                uses: SamKirkland/FTP-Deploy-Action@4.3.3
+                with:
+                    server: ${{ secrets.DEPLOY_FTP_IP }}
+                    username: ${{ secrets.DEPLOY_FTP_USER }}
+                    password: ${{ secrets.DEPLOY_FTP_PASS }}
+                    server-dir: ${{ secrets.DEPLOY_FTP_FOLDER }}
+                    exclude: |
+                        **/node_modules/**
+                        **/.git/**
+                        **/.git*/**
+                        **/.github/**
+                        **/.idea/**
+                        **/.husky/**
+                        **/.vscode/**
+                        .env
+                        .gitignore
+                        webpack.config.js
+                        tsconfig.json
+                        postcss.config.js
+                        package-lock.json
+                        package.json
+                        .babelrc
+                        .editorconfig
+                        .eslintignore
+                        .eslintrc.js
+                        .prettierignore
+                        .prettierrc.js
+                        .stylelintignore
+                        .stylelintrc.js
+                        entry-files.json
+                        phpcs.xml.dist
+                        app/.gitignore
+                        app/config-overrides.js
+                        app/package.json
+                        app/package-lock.json
+                        app/README.md
+                        app/jsconfig.json
