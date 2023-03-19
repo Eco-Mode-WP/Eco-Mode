@@ -1,0 +1,108 @@
+<?php
+
+namespace EcoMode\EcoModeWP;
+
+use WP_Error;
+
+class RequestThrottler {
+
+	private array $throttled_requests;
+
+	/**
+	 * @param ThrottledRequest[] $throttled_requests
+	 */
+	public function __construct( array $throttled_requests ) {
+		$this->throttled_requests = \array_reduce(
+			$throttled_requests,
+			function ( $map, $throttled_request ) {
+				$map[ $throttled_request->url ] = $throttled_request;
+
+				return $map;
+			},
+			[]
+		);
+	}
+
+	/**
+	 * Throttles requests by serving from cache.
+	 *
+	 * Intended to be used on the `pre_http_request` filter.
+	 *
+	 * Returning a non-false value from the filter will short-circuit the HTTP request and return
+	 * early with that value. A filter should return one of:
+	 *
+	 *  - An array containing 'headers', 'body', 'response', 'cookies', and 'filename' elements
+	 *  - A WP_Error instance
+	 *  - boolean false to avoid short-circuiting the response.
+	 *
+	 * Returning any other value may result in unexpected behaviour.
+	 *
+	 * @param false|array|WP_Error $response    A preemptive return value of an HTTP request. Default false.
+	 * @param array                $parsed_args HTTP request arguments.
+	 * @param string               $url         The request URL.
+	 *
+	 * @return false|array|WP_Error A preemptive return value of an HTTP request.
+	 */
+	public function throttle_request( $response = false, $parsed_args, $url ) {
+		if ( ! isset( $this->throttled_requests[ $url ] ) ) {
+			return $response;
+		}
+
+		$throttled_request = $this->throttled_requests[ $url ];
+
+		$cache = \get_transient( $this->get_cache_key( $throttled_request, $parsed_args ) );
+
+		if ( ! $cache ) {
+			return $response;
+		}
+
+		return $cache;
+	}
+
+	/**
+	 * Caches the result of any request that should be throttled.
+	 *
+	 * Intended to be used on the `http_response` filter.
+	 *
+	 * Filters a successful HTTP API response immediately before the response is returned.
+	 *
+	 * @param array  $response    HTTP response.
+	 * @param array  $parsed_args HTTP request arguments.
+	 * @param string $url         The request URL.
+	 *
+	 * @return array The response.
+	 */
+	public function cache_response( $response, $parsed_args, $url ) {
+		if ( ! isset( $this->throttled_requests[ $url ] ) ) {
+			return $response;
+		}
+
+		$throttled_request = $this->throttled_requests[ $url ];
+
+		$method = $parsed_args['method'];
+		if ( $throttled_request->method !== $method ) {
+			return $response;
+		}
+
+		if ( $response['response']['code'] < 200 || $response['response']['code'] >= 300 ) {
+			return $response;
+		}
+
+		if ( $parsed_args['stream'] ) {
+			return $response;
+		}
+
+		\set_transient(
+			$this->get_cache_key( $throttled_request, $parsed_args ),
+			$response,
+			$throttled_request->max_frequency_in_seconds,
+		);
+
+		return $response;
+	}
+
+
+	private function get_cache_key( ThrottledRequest $throttled_request, $parsed_args ): string {
+		return 'Eco-mode-wp-' . $throttled_request->method . '-' . $throttled_request->url . '-' . md5( \serialize( $parsed_args ) );
+	}
+}
