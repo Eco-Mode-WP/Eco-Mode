@@ -59,6 +59,9 @@
 		]
 	},
 	"dependencies": {
-		"@wordpress/icons": "^6.1.0"
+		"@faker-js/faker": "^7.6.0",
+		"@wordpress/icons": "^6.1.0",
+		"chart.js": "^4.2.1",
+		"react-chartjs-2": "^5.2.0"
 	}
 }

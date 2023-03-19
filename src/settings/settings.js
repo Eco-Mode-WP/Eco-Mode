@@ -4,12 +4,14 @@
 import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
 import { render } from '@wordpress/element';
+import EcoModePerDayChart from "./components/EcoModePerDayChart";
 
 const Settings = () => {
 	return (
 		<>
 			<PanelBody initialOpen={true} title={__('Eco Mode Settings')}>
 				<div className="settings-panel-wrapper">Settings Here</div>
+				<EcoModePerDayChart />
 			</PanelBody>
 		</>
 	);
