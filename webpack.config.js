@@ -67,6 +67,11 @@ buildConfig.push({
 		filename: '[name].js',
 	},
 
+	externals: {
+		'react': 'React',
+		'react-dom': 'ReactDOM',
+	},
+
 	optimization: {
 		...defaultConfig.optimization,
 		removeEmptyChunks: true,
