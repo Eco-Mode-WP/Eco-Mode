@@ -28,3 +28,21 @@ function register_plugin_settings(): void {
 		]
 	);
 }
+
+/**
+ * Expose data to rest api
+ *
+ * @return array
+ */
+function get_custom_eco_mode_data(): array {
+	$data = [];
+
+	$eco_mode_data = get_option( 'eco_mode_prevented_requests' );
+	if ( ! $eco_mode_data ) {
+		$data['custom_eco_mode_data'] = $eco_mode_data;
+	}
+	return $data;
+}
+
+
+
