@@ -1,1 +1,5 @@
-[]
+[
+	"block-library/eco-mode-calculator/style.css",
+	"block-library/eco-mode-calculator/index.js",
+	"block-library/eco-mode-calculator/frontend.js"
+]

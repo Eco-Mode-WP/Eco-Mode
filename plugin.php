@@ -26,10 +26,13 @@ if ( is_readable( $ecomode_blog_autoloader ) ) {
 define( 'ECO_MODE_VERSION', '0.1.0' );
 define( 'ECO_MODE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ECO_MODE_DIR_URL', esc_url( plugin_dir_url( __FILE__ ) ) );
+define( 'ECO_MODE_BLOCKS_LIST', [
+	'eco-mode-calculator'
+]);
 
 /* Load Settings */
 require_once __DIR__ . '/includes/settings/settings.php';
-
+require_once __DIR__ . '/includes/setup-blocks.php';
 /**
  * Inits the plugin and registers required actions and filters.
  *

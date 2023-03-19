@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ecom/eco-mode-calculator",
+	"title": "Eco Mode Calculator",
+	"description": "Utility to calculate energy savings using this Eco Mode plugin",
+	"category": "eco-mode",
+	"icon": "calculator",
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"align": []
+	},
+	"keywords": ["calculator" ,"eco-mode"],
+	"attributes": {
+		"anchor": {
+			"type": "string"
+		}
+	},
+	"style": "file:../../../build/block-library/eco-mode-calculator/style.css",
+	"viewScript": "file:../../../build/block-library/eco-mode-calculator/frontend.js",
+	"editorScript": "file:../../../build/block-library/eco-mode-calculator/index.js",
+	"editorStyle": "file:../../../build/block-library/eco-mode-calculator/editor.css"
+}
+
