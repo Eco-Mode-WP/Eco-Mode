@@ -12,16 +12,13 @@ import EcoModePerDayChart from "./components/EcoModePerDayChart";
 
 const Settings = () => {
 	const ecoModeData = useEcoModeData();
-	/*
-	Get data.
-	console.log(ecoModeData);
-	ecoModeData?.file_mods?.prevented_requests
-	 */
+	// Get data.
+	// console.log(ecoModeData);
+	//ecoModeData?.file_mods?.prevented_requests
 
 	return (
 		<>
-			<PanelBody initialOpen={true} title={__('Eco Mode Settings')}>
-				<div className="settings-panel-wrapper">Settings here</div>
+			<PanelBody initialOpen={true} title={__('WP version check')}>
 				<EcoModePerDayChart />
 			</PanelBody>
 		</>
