@@ -7,7 +7,11 @@ class DailySavings {
 
 	public static function register_post_type() {
 		\register_post_type( self::POST_TYPE,
-			[ 'supports' => [ 'title' ] ] );
+			[
+				'supports' => [ 'title' ] ,
+				'show_in_rest' => true,
+			]
+		);
 	}
 
 	public static function track_outgoing_request( ThrottledRequest $request ) {

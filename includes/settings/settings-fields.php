@@ -9,6 +9,8 @@ declare( strict_types=1 );
 
 namespace EcoMode\Settings\Fields;
 
+use EcoMode\EcoModeWP\OutgoingRequests;
+
 add_action( 'init', __NAMESPACE__ . '\\register_plugin_settings', 10 );
 
 /**
@@ -36,7 +38,11 @@ function register_plugin_settings(): void {
  */
 function get_custom_eco_mode_data(): array {
 	// Setup data array.
-	$data = ['custom_eco_mode_data' => [], 'daily_savings' => []];
+	$data = [
+		'custom_eco_mode_data' => [],
+		'daily_savings'        => [],
+		'requests'             => OutgoingRequests::get_data(),
+	];
 
 	// Get prevented requests data.
 	$eco_mode_data = get_option( 'eco_mode_prevented_requests' );
