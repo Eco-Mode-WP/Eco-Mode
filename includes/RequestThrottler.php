@@ -103,6 +103,26 @@ class RequestThrottler {
 
 
 	private function get_cache_key( ThrottledRequest $throttled_request, $parsed_args ): string {
-		return 'Eco-mode-wp-' . $throttled_request->method . '-' . $throttled_request->url . '-' . md5( \serialize( $parsed_args ) );
+		$relevant_args = [
+			'method'              => $parsed_args['method'],
+			'timeout'             => $parsed_args['timeout'],
+			'redirection'         => $parsed_args['redirection'],
+			'httpversion'         => $parsed_args['httpversion'],
+			'user-agent'          => $parsed_args['user-agent'],
+			'reject_unsafe_urls'  => $parsed_args['reject_unsafe_urls'],
+			'blocking'            => $parsed_args['blocking'],
+			'headers'             => $parsed_args['headers'],
+			'cookies'             => $parsed_args['cookies'],
+			'body'                => $parsed_args['body'],
+			'compress'            => $parsed_args['compress'],
+			'decompress'          => $parsed_args['decompress'],
+			'sslverify'           => $parsed_args['sslverify'],
+			'sslcertificates'     => $parsed_args['sslcertificates'],
+			'stream'              => $parsed_args['stream'],
+			'filename'            => $parsed_args['filename'],
+			'limit_response_size' => $parsed_args['limit_response_size'],
+		];
+
+		return 'Eco-mode-wp-' . $throttled_request->method . '-' . $throttled_request->url . '-' . md5( \serialize( $relevant_args ) );
 	}
 }
