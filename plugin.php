@@ -49,25 +49,62 @@ function init(): void {
 	add_action( 'schedule_event', [ Alter_Schedule::class, 'filter_add_events' ], 2 );
 	add_filter( 'pre_get_scheduled_event', [ Alter_Schedule::class, 'filter_get_scheduled' ], 99, 4 );
 
-	$throttler = new RequestThrottler( [
+	/**
+	 * Allows the user to fully customize the Eco Mode, by replacing the mode function by a plugin of your own.
+	 *
+	 * Example:
+	 *
+	 * By adding
+	 * add_filter( 'eco_mode_wp_select_mode', function() { return 'EcoMode\EcoModeWP\developer_mode'; } );
+	 * To your code, you will be running in developer mode, or you simply replace the complete function.
+	 *
+	 * @param callable $callback The Callback function.
+	 */
+	call_user_func( apply_filters( 'eco_mode_wp_select_mode', __NAMESPACE__ . '\normal_mode' ) );
+}
 
+function normal_mode() {
+	do_action( 'eco_mode_wp_mode_start', 'normal' );
+	$throttler = new RequestThrottler( [
 		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
 		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
 
 		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months
 		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
-
 	] );
+
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
 	add_action( 'init', [ DailySavings::class, 'register_post_type' ] );
+
+	Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 16:00' ] );
+	//Alter_Schedule::disable( 'wp_https_detection' );
+	//Alter_Schedule::clear_all();
+
+	do_action( 'eco_mode_wp_mode_end', 'normal' );
+}
+
+function developer_mode() {
+	do_action( 'eco_mode_wp_mode_start', 'developer' );
+	$throttler = new RequestThrottler( [
+		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
+		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
+
+		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months
+		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
+	] );
+
+	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
+	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
+	add_action( 'init', [ DailySavings::class, 'register_post_type' ] );
+
+	Alter_Schedule::disable( 'wp_https_detection' );
+
+	do_action( 'eco_mode_wp_mode_end', 'developer' );
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
 
-Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 16:00' ] );
-//Alter_Schedule::disable( 'wp_https_detection' );
-//Alter_Schedule::clear_all();
 
 // TODO: Remove this hook; it's only for generating some test data
 add_action( 'dashboard_glance_items', function () {
