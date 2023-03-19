@@ -77,7 +77,7 @@ jobs:
                     echo "vendor/bin" >> $GITHUB_PATH
 
             -   name: 📂 Sync files to eco-mode.confstack.com
-                if: ${{ github.ref == 'refs/heads/stage' }}
+                if: ${{ github.ref == 'refs/heads/add-deployer' }}
                 uses: SamKirkland/FTP-Deploy-Action@4.3.3
                 with:
                     server: ${{ secrets.DEPLOY_FTP_IP }}
