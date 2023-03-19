@@ -5,171 +5,64 @@ namespace EcoMode\EcoModeWP;
  * Dummy class to show the idea of autoloading.
  */
 class Alter_Schedule {
-	/**
-	 * Array of hooks that are to be rescheduled.
-	 *
-	 * @var array
-	 */
-	private static array $rescheduled_hooks = [];
+    const OPTION_NAME = 'eco_mode_registered_alteration';
 
-	/**
-	 * Array of hooks that shall be disabled altogether.
-	 *
-	 * @var array
-	 */
-	private static array $disabled_hooks = [];
-
-	/**
-	 * Registers a reschedule for a certain hook.
-	 *
-	 * @see strtotime()
-	 *
-	 * @param string $action The name of the action to reschedule.
-	 * @param array $args {
-	 *     An object containing an event's data, or boolean false to prevent the event from being scheduled.
-	 *
-	 *     @type string $recurrence     The recurrence, like 'daily', 'hourly' etc.
-	 *     @type string $start          A strtotime() compatible string which defines when it shall be excecuted for the first time. Optional
-	 * }
-	 *
-	 * @return bool
-	 */
-	public static function reschedule(string $action, array $args ): bool {
-		if ( empty( $args['recurrence'] ) ) {
-			return false;
-		}
-
-		self::$rescheduled_hooks[ $action ] = $args;
-
-		return ! empty( self::$rescheduled_hooks[ $action ] );
-	}
-
-	/**
-	 * Registers a hook that shall not be scheduled.
-	 *
-	 * @param string $action The name of the action to reschedule.
-	 * @return bool
-	 */
-	public static function disable( string $action ): bool {
-		if ( in_array( $action, self::$disabled_hooks, true ) ) {
-			return true;
-		}
-
-		self::$disabled_hooks[] = $action;
-
-		return true;
-	}
-
-	/**
-	 * Removes all registered hooks.
-	 *
-	 * @return bool
-	 */
-	public static function clear_all(): bool {
-		foreach ( self::$rescheduled_hooks as $action => $recurrence ) {
-			wp_clear_scheduled_hook( $action );
-		}
-
-		foreach ( self::$disabled_hooks as $action ) {
-			wp_clear_scheduled_hook( $action );
-		}
-
-		return true;
-	}
-
-	/**
-	 * Modifies an event before it is scheduled.
-	 *
-	 * @param \stdClass|false $event {
-	 *     An object containing an event's data, or boolean false to prevent the event from being scheduled.
-	 *
-	 *     @type string       $hook      Action hook to execute when the event is run.
-	 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-	 *     @type string|false $schedule  How often the event should subsequently recur.
-	 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
-	 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-	 * }
-	 */
-	public static function filter_add_events( $event ) {
-		// Prevent adding this hook.
-		if ( in_array( $event, self::$disabled_hooks, true ) ) {
-			self::ping_altered_schedule( $event, 'disabled' );
-			return false;
-		}
-
-		if ( ! is_object( $event ) ) {
-			return $event;
-		}
-
-		// Reschedule.
-		if ( isset( self::$rescheduled_hooks[ $event->hook ] ) ) {
-			self::ping_altered_schedule( $event, self::$rescheduled_hooks[ $event->hook ]['recurrence'] );
-			$event->schedule = self::$rescheduled_hooks[ $event->hook ]['recurrence'];
-
-			if ( isset( self::$rescheduled_hooks[ $event->hook ]['start'] ) && is_string( self::$rescheduled_hooks[ $event->hook ]['start'] ) ) {
-				$new_start = strtotime( self::$rescheduled_hooks[ $event->hook ]['start'] );
-				if ( is_int( $new_start ) && $new_start > 0 ) {
-					$event->timestamp = $new_start;
-				}
+    public static function register_alteration( $name, $condition, $scheduled_action, $schedule, $prevented_requests, $request_url ) {
+        $registered_alternation = get_site_option( self::OPTION_NAME );
+        
+        if ( $condition ) {
+            $scheduled_event = wp_get_scheduled_event( $scheduled_action );
+            
+			if ( $schedule === false && ! empty( $scheduled_event ) ) {
+				wp_clear_scheduled_hook( $scheduled_action );
 			}
-		}
+            else if ( $schedule !== $scheduled_event->schedule ) {
+                wp_schedule_event( $scheduled_event->timestamp, $schedule, $scheduled_action ); 
+            }
+        
+            if ( ! isset( $registered_alternation[ $name ] ) ) {
+                self::set_option( $name, array(
+                    'scheduled_action'   => $scheduled_action,
+                    'prevented_requests' => $prevented_requests,
+                    'request_url'        => $request_url,
+                ) );
+            }
+        }
 
-		return $event;
-	}
+		// wp_clear_scheduled_hook( $name );
+        
+        if ( ! $condition && isset( $registered_alternation[ $name ] ) ) {
+            self::remove_option( $name );
+			wp_clear_scheduled_hook( $scheduled_action );
+        }    
+    } 
+    
+    private static function set_option( $name, array $args ) {
+        $option = get_site_option( self::OPTION_NAME, array() );
 
-	/**
-	 * Injects a fake result for even schedule for disabled events.
-	 *
-	 * @param null|false|object $pre  Value to return instead. Default null to continue retrieving the event.
-	 * @param string            $hook Action hook of the event.
-	 * @param array             $args Array containing each separate argument to pass to the hook's callback function.
-	 *                                Although not passed to a callback, these arguments are used to uniquely identify
-	 *                                the event.
-	 * @param int|null  $timestamp Unix timestamp (UTC) of the event. Null to retrieve next scheduled event.
-	 *
-	 * @return \stdClass
-	 */
-	public static function filter_get_scheduled( $pre, string $hook, array $args, ?int $timestamp ) {
-		if ( in_array( $hook, self::$disabled_hooks, true ) ) {
-			$pre = new \stdClass();
-			$pre->hook = $hook;
-			$pre->schedule = false;
-			$pre->args = $args;
-			$pre->timestamp = PHP_INT_MAX;
-		}
+        $option[ $name ] = $args;
 
-		return $pre;
-	}
-
-	/**
-	 * Notifies about the altering of an event..
-	 *
-	 * @param \stdClass|false $event {
-	 *     An object containing an event's data, or boolean false to prevent the event from being scheduled.
-	 *
-	 *     @type string       $hook      Action hook to execute when the event is run.
-	 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-	 *     @type string|false $schedule  How often the event should subsequently recur.
-	 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
-	 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-	 * }
-	 * @param string $new_recurrence The new recurrence.
-	 */
-	private static function ping_altered_schedule( $event, string $new_recurrence ): void {
-		/**
-		 * Notifies about the altering of an event..
-		 *
-		 * @param \stdClass|false $event {
-		 *     An object containing an event's data, or boolean false to prevent the event from being scheduled.
-		 *
-		 *     @type string       $hook      Action hook to execute when the event is run.
-		 *     @type int          $timestamp Unix timestamp (UTC) for when to next run the event.
-		 *     @type string|false $schedule  How often the event should subsequently recur.
-		 *     @type array        $args      Array containing each separate argument to pass to the hook's callback function.
-		 *     @type int          $interval  The interval time in seconds for the schedule. Only present for recurring events.
-		 * }
-		 * @param string $new_recurrence The new recurrence, 'disabled' if it is to be disabled.
-		 */
-		do_action( 'eco_mode_wp_altered_schedule', $event, $new_recurrence );
-	}
+        update_site_option( self::OPTION_NAME, $option );    
+    }
+    
+    private static function is_option_set( $name ) {
+        $option = get_site_option( self::OPTION_NAME, array() );
+        
+        return isset( $option[ $name ] );
+    }
+    
+    private static function remove_option( $name ) {
+        $option = get_site_option( self::OPTION_NAME, array() );
+        
+        $default_args = array(
+            'scheduled_action'   => '',
+            'prevented_requests' => '',
+            'request_url'        => '',
+        );
+        
+        if ( isset( $option[ $name ] ) ) {
+            unset( $option[ $name ] );
+            update_site_option( self::OPTION_NAME, $option );
+        }
+    }
 }
