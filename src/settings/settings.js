@@ -11,9 +11,10 @@ import useEcoModeData from './components/data';
 
 const Settings = () => {
 	const ecoModeData = useEcoModeData();
+	console.log(ecoModeData);
+
 	/*
 	Get data.
-	console.log(ecoModeData);
 	ecoModeData?.file_mods?.prevented_requests
 	 */
 
