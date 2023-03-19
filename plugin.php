@@ -43,6 +43,7 @@ function init(): void {
 	 */
 
 	add_action( 'plugins_loaded', [ Dummy::class, 'dummy' ] );
+	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 
 	$throttler = new RequestThrottler( [
