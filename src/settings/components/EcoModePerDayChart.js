@@ -21,13 +21,18 @@ ChartJS.register(
 
 export const options = {
 	responsive: true,
+	scale: {
+		ticks: {
+			precision: 0
+		}
+	},
 	plugins: {
 		legend: {
 			position: 'top',
 		},
 		title: {
 			display: true,
-			text: 'Chart.js Bar Chart',
+			text: 'WP version check',
 		},
 	},
 };
@@ -39,12 +44,12 @@ export const data = {
 	datasets: [
 		{
 			label: 'Initial',
-			data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+			data: labels.map(() => faker.datatype.number({ min:3, max: 3 })),
 			backgroundColor: '#f87171',
 		},
 		{
 			label: 'Saved ',
-			data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+			data: labels.map(() => faker.datatype.number({ min:2, max: 2 })),
 			backgroundColor: '#34d399',
 		},
 	],

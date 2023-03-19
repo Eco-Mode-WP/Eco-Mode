@@ -11,7 +11,6 @@ function useEcoModeData() {
 	const data = window.EcoModeSettings || {};
 
 	useEffect(() => {
-
 		if (data) {
 			setEcoModeData(data);
 		}
