@@ -13,14 +13,14 @@
 namespace EcoMode\EcoModeWP;
 
 if ( ! defined( 'ABSPATH' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit();
+    header( 'Status: 403 Forbidden' );
+    header( 'HTTP/1.1 403 Forbidden' );
+    exit();
 }
 
 $ecomode_blog_autoloader = __DIR__ . '/vendor/autoload.php';
 if ( is_readable( $ecomode_blog_autoloader ) ) {
-	require_once $ecomode_blog_autoloader;
+    require_once $ecomode_blog_autoloader;
 }
 
 define( 'ECO_MODE_VERSION', '0.1.0' );
@@ -39,15 +39,15 @@ require_once __DIR__ . '/includes/setup-blocks.php';
  * @since 0.1.0
  */
 function init(): void {
-	/**
-	 * How to add actions and filters for lazy loading via Composer
-	 *
-	 * add_action( 'action_handle', [ Dummy
-	 */
+    /**
+     * How to add actions and filters for lazy loading via Composer
+     *
+     * add_action( 'action_handle', [ Dummy
+     */
 
-	add_action( 'plugins_loaded', [ Dummy::class, 'dummy' ] );
-	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
-	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
+    add_action( 'plugins_loaded', [ Dummy::class, 'dummy' ] );
+    add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
+    add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 
 	add_action( 'schedule_event', [ Alter_Schedule::class, 'filter_add_events' ], 2 );
 	add_filter( 'pre_get_scheduled_event', [ Alter_Schedule::class, 'filter_get_scheduled' ], 99, 4 );
