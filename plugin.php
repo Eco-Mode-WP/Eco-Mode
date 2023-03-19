@@ -46,6 +46,9 @@ function init(): void {
 	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 
+	add_action( 'schedule_event', [ Alter_Schedule::class, 'filter_add_events' ], 2 );
+	add_filter( 'pre_get_scheduled_event', [ Alter_Schedule::class, 'filter_get_scheduled' ], 99, 4 );
+
 	$throttler = new RequestThrottler( [
 
 		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
@@ -62,20 +65,12 @@ function init(): void {
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
 
-add_action(
-	'plugins_loaded',
-	function () {
-		Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 3:00' ] );
-	},
-	0
-);
-add_action( 'plugins_loaded', [ Alter_Schedule::class, 'filter_add_events' ], 2 );
-add_filter( 'pre_get_scheduled_event', [ Alter_Schedule::clear_all(), 'filter_add_events' ], 99, 4 );
-
-// TODO: call Reschedule::clear_all() on the right time to clear the registered hooks.
-
+Alter_Schedule::reschedule('wp_https_detection', [ 'recurrence' => 'daily', 'start' => 'tomorrow 16:00' ] );
+//Alter_Schedule::disable( 'wp_https_detection' );
+//Alter_Schedule::clear_all();
 
 add_action( 'dashboard_glance_items', function () {
 	$res  = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam" );
 	$res2 = \wp_remote_get( "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam", [ 'body' => [ 3 ] ] );
 } );
+

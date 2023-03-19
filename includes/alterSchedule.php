@@ -78,17 +78,6 @@ class Alter_Schedule {
 	}
 
 	/**
-	 * Adds the filter to alter the recurrence of the event.
-	 *
-	 * @return bool
-	 */
-	public static function add_filter(): bool {
-		add_filter( 'schedule_event', [ __CLASS__, 'filter_add_events'] );
-
-		return true;
-	}
-
-	/**
 	 * Modifies an event before it is scheduled.
 	 *
 	 * @param \stdClass|false $event {
@@ -108,10 +97,14 @@ class Alter_Schedule {
 			return false;
 		}
 
+		if ( ! is_object( $event ) ) {
+			return $event;
+		}
+
 		// Reschedule.
 		if ( isset( self::$rescheduled_hooks[ $event->hook ] ) ) {
 			self::ping_altered_schedule( $event, self::$rescheduled_hooks[ $event->hook ]['recurrence'] );
-			$event->schedule = self::$rescheduled_hooks[ $event->hook ];
+			$event->schedule = self::$rescheduled_hooks[ $event->hook ]['recurrence'];
 
 			if ( isset( self::$rescheduled_hooks[ $event->hook ]['start'] ) && is_string( self::$rescheduled_hooks[ $event->hook ]['start'] ) ) {
 				$new_start = strtotime( self::$rescheduled_hooks[ $event->hook ]['start'] );
