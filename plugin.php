@@ -49,10 +49,10 @@ function init(): void {
 	$throttler = new RequestThrottler( [
 
 		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
-		new new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
+		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
 
 		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months
-		new new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
+		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
 
 	] );
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
