@@ -80,7 +80,7 @@ class OutgoingRequests {
 
         $runtime = ( microtime( true ) - $this->request_start_time );
 
-		$identifier = ($args['method'] ?? '') . '_' . $parsed['scheme'] . '://' . $parsed['host'] . $parsed['path'];
+		$identifier = ($args['method'] ?? '') . '_' . $parsed['scheme'] . '://' . $parsed['host'] . ($parsed['path'] ?? '');
 		$request_post = self::get_request_post($identifier);
 
 		// Update request_post with our data
