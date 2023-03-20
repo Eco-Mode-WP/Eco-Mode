@@ -7,7 +7,7 @@ namespace EcoMode\EcoModeWP;
 class Alter_Schedule {
     public const OPTION_NAME = 'eco_mode_registered_alteration';
 
-    public static function register_alteration( $name, $condition, $scheduled_action, $schedule, $prevented_requests, $request_url ) {
+    public static function register_alteration( $name, $condition, $scheduled_action, $schedule, $request_url ) {
         $registered_alternation = get_site_option( self::OPTION_NAME );
         
         if ( $condition ) {
@@ -23,7 +23,7 @@ class Alter_Schedule {
             if ( ! isset( $registered_alternation[ $name ] ) ) {
                 self::set_option( $name, array(
                     'scheduled_action'   => $scheduled_action,
-                    'prevented_requests' => $prevented_requests,
+                    'prevented_requests' => self::get_prevented_request_per_day( $scheduled_event->schedule, $schedule ),
                     'request_url'        => $request_url,
                 ) );
             }
@@ -74,4 +74,20 @@ class Alter_Schedule {
             update_site_option( self::OPTION_NAME, $option );
         }
     }
+	
+	private static function get_prevented_request_per_day( $original, $new ) {
+		$preset = array(
+			'hourly'     => 24,
+			'twicedaily' => 2,
+			'daily'      => 1,
+			'weekly'     => 0.15,
+			'monthly'    => 0.032
+		);
+		
+		if ( ! array_key_exists( $original, $preset ) || ! array_key_exists( $new, $preset ) ) {
+			return false;
+		}
+	
+		return $preset[ $original ] - $preset[ $new ];
+	}
 }
