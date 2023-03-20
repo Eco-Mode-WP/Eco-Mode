@@ -13,7 +13,7 @@ import EcoModePerMonthChart from './components/EcoModePerMonthChart';
 import RequestList from './components/RequestList';
 
 const Settings = () => {
-	const [timeSpanFilter, setTimeSpanFilter] = useState('perDay');
+	const [timeSpanFilter, setTimeSpanFilter] = useState('Day');
 	const [active, setActive] = useState('filter-one');
 
 	const handleFilter = useCallback(
@@ -51,7 +51,7 @@ const Settings = () => {
 				</div>
 				<div className="eco-mode__chart-wrapper">
 					<div className="eco-mode__chart-panel">
-						{timeSpanFilter === 'perDay' ? (
+						{timeSpanFilter === 'Day' ? (
 							<EcoModePerDayChart />
 						) : (
 							<EcoModePerMonthChart />
