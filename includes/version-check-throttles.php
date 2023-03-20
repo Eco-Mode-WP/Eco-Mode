@@ -15,9 +15,9 @@ class Version_Check_Throttles {
      */
     public static function init(): void {
         
-        Alter_Schedule::register_alteration( self::FILE_MODS_THROTTLER, ! self::is_file_mod_allowed(), self::SCHEDULED_ACTION, false, 2, self::REQUEST_URL );
+        Alter_Schedule::register_alteration( self::FILE_MODS_THROTTLER, ! self::is_file_mod_allowed(), self::SCHEDULED_ACTION, false, self::REQUEST_URL );
 
-		Alter_Schedule::register_alteration( self::WP_VERSION_THROTTLER, self::is_wp_outdated(), self::SCHEDULED_ACTION, 'weekly', 1.8, self::REQUEST_URL );
+		Alter_Schedule::register_alteration( self::WP_VERSION_THROTTLER, self::is_wp_outdated(), self::SCHEDULED_ACTION, 'weekly', self::REQUEST_URL );
     }
 
     private static function is_file_mod_allowed() {

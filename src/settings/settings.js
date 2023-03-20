@@ -65,14 +65,6 @@ const Settings = () => {
 							ever to take steps to reduce our environmental
 							impact.
 						</p>
-						<ul>
-							<li>
-								<strong>Prevented CO2 emission</strong>: 123gr
-							</li>
-							<li>
-								<strong>Saved glacier amount</strong>: 0.003t
-							</li>
-						</ul>
 					</div>
 				</div>
 			</PanelBody>

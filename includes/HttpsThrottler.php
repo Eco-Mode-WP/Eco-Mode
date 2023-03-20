@@ -21,7 +21,6 @@ class HttpsThrottler {
 			true,
 			self::SCHEDULED_ACTION,
 			wp_is_using_https() ? 'weekly' : 'daily', // Alter to weekly if site is already HTTPS, daily otherwise
-			wp_is_using_https() ? 1.8 : 1,
 			home_url( '/', 'https' )
 		);
 	}
