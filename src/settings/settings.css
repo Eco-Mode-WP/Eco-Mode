@@ -6,6 +6,26 @@
 	--spacing: 1rem;
 }
 
+#eco-mode-settings {
+	--panel-title-background: #053427;
+
+	& .components-panel__body.is-opened {
+		--panel-title-background: #34816b;
+	}
+
+	& .components-panel__body-title {
+		background-color: var(--panel-title-background);
+
+		& .components-panel__body-toggle {
+			color: #fff;
+
+			& svg {
+				filter: invert(1);
+			}
+		}
+	}
+}
+
 .eco-mode__filter {
 	align-items: center;
 	display: flex;
@@ -20,8 +40,8 @@
 
 		&.active {
 			background-color: forestgreen;
+			border-color: forestgreen;
 			color: #fff;
-			border-color:forestgreen;
 		}
 	}
 }
