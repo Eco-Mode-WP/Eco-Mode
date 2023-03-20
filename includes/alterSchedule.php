@@ -37,8 +37,13 @@ class Alter_Schedule {
         }    
     } 
 	
-	public static function get_options() {
- 		return get_site_option( self::OPTION_NAME );
+	/**
+	 * Gets the options array.
+	 *
+	 * @return array
+	 */
+	public static function get_options(): array {
+ 		return get_site_option( self::OPTION_NAME, [] );
 	}
 
     private static function set_option( $name, array $args ) {
