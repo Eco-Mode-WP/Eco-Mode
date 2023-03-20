@@ -5,7 +5,7 @@ namespace EcoMode\EcoModeWP;
  * Dummy class to show the idea of autoloading.
  */
 class Alter_Schedule {
-    const OPTION_NAME = 'eco_mode_registered_alteration';
+    public const OPTION_NAME = 'eco_mode_registered_alteration';
 
     public static function register_alteration( $name, $condition, $scheduled_action, $schedule, $prevented_requests, $request_url ) {
         $registered_alternation = get_site_option( self::OPTION_NAME );
@@ -36,7 +36,11 @@ class Alter_Schedule {
 			wp_clear_scheduled_hook( $scheduled_action );
         }    
     } 
-    
+	
+	public static function get_options() {
+ 		return get_site_option( self::OPTION_NAME );
+	}
+
     private static function set_option( $name, array $args ) {
         $option = get_site_option( self::OPTION_NAME, array() );
 
