@@ -105,5 +105,14 @@
         &.res-size {
             width: 170px;
         }
+
+        &.res-adjust {
+            margin-left: auto;
+            width: 300px;
+
+            >div {
+                padding-left: var(--spacing);
+            }
+        }
     }
 }

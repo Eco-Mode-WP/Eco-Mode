@@ -101,7 +101,9 @@ export default function RequestList(props) {
 						kB
 					</div>
 					<div className="eco-mode__table-column res-adjust">
-						<RequestControl />
+						<div>
+							<RequestControl />
+						</div>
 					</div>
 				</div>
 			);
