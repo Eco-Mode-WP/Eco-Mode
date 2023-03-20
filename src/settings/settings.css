@@ -2,9 +2,30 @@
     /* Colors */
     --border-color: #e0e0e0;
 
-    /* Spacing */
-    --spacing: 1rem;
+	/* Spacing */
+	--spacing: 1rem;
 }
+
+#eco-mode-settings {
+	--panel-title-background: #053427;
+
+	& .components-panel__body.is-opened {
+		--panel-title-background: #34816b;
+	}
+
+	& .components-panel__body-title {
+		background-color: var(--panel-title-background);
+
+		& .components-panel__body-toggle {
+			color: #fff;
+
+			& svg {
+				filter: invert(1);
+			}
+		}
+	}
+}
+
 .eco-mode {
     /* Filter */
     &__filter {
@@ -18,6 +39,12 @@
             padding: calc(var(--spacing) / 2) var(--spacing);
             border: 1px solid var(--border-color);
             border-radius: calc(var(--spacing) / 2);
+
+            &.active {
+              background-color: forestgreen;
+              border-color: forestgreen;
+              color: #fff;
+            }
         }
     }
 

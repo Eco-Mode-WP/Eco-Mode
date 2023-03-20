@@ -4,7 +4,10 @@ export default function RequestList( props ) {
 	if ( ! props.requests ) {
 		return null;
 	}
-	const rows = props.requests.map( ( request ) => {
+  
+	const rows = props.requests
+  .filter( request => !request.post_title.includes('wp-cron') )
+  .map( ( request ) => {
 		const aggregate = request.history.reduce( ( summary, event ) => {
 			summary.total ++;
 			summary.totalRuntime += event.runtime_in_s;
