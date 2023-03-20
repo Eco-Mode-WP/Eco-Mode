@@ -23,7 +23,7 @@ export const options = {
 	responsive: true,
 	scale: {
 		ticks: {
-			precision: 0
+			stepSize: 0.2
 		}
 	},
 	plugins: {

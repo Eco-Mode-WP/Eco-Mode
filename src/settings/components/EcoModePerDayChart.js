@@ -23,7 +23,7 @@ export const options = {
 	responsive: true,
 	scale: {
 		ticks: {
-			precision: 0
+			stepSize: 0.2
 		}
 	},
 	plugins: {
@@ -44,12 +44,12 @@ export const data = {
 	datasets: [
 		{
 			label: 'Initial',
-			data: labels.map(() => faker.datatype.number({ min:3, max: 3 })),
+			data: labels.map(() => faker.datatype.number({ min:2.0, max: 2.0 })),
 			backgroundColor: '#f87171',
 		},
 		{
 			label: 'Saved ',
-			data: labels.map(() => faker.datatype.number({ min:2, max: 2 })),
+			data: labels.map(() => faker.datatype.number({ min:0.2, max: 0.2 })),
 			backgroundColor: '#34d399',
 		},
 	],
