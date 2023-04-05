@@ -77,8 +77,6 @@ function get_custom_eco_mode_data(): array {
 			];
 
 		}
-	} else {
-		// no posts found
 	}
 
 	return $data;

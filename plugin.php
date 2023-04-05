@@ -4,8 +4,8 @@
  *
  * Plugin Name:  Eco Mode WP
  * Version:      0.1.0
- * Description:  A Cloudfest Hackathon project.
- * Author:       Multiple
+ * Description:  Reduce the carbon footprint of your website by intelligently preventing unnecessary web-requests and background tasks.
+ * Author:       Team Eco-Mode
  * Text Domain:  eco-mode
  * Requires PHP: 7.4
  *
@@ -55,6 +55,8 @@ function init(): void {
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 	add_action( 'admin_init', [ HttpsThrottler::class, 'init' ] );
 
+	\register_deactivation_hook( __FILE__, __NAMESPACE__ . '\do_deactivation_hook' );
+
 	/**
 	 * Allows the user to fully customize the Eco Mode, by replacing the mode function by a plugin of your own.
 	 *
@@ -70,21 +72,41 @@ function init(): void {
 }
 
 /**
+ * Filter an array of ThrottledRequest objects.
+ *
+ * @param array $throttled_requests The array of ThrottledRequest objects.
+ *
+ * @return array The filtered array of ThrottledRequest objects.
+ *
+ * @since 0.1.0
+ */
+function filter_requests( array $throttled_requests ): array {
+	$throttled_requests = (array) \apply_filters( 'eco_mode_wp_throttled_requests', $throttled_requests );
+	$throttled_requests = \array_filter(
+		$throttled_requests,
+		function ( $throttled_request ) {
+			return is_a( $throttled_request, ThrottledRequest::class );
+		}
+	);
+
+	return $throttled_requests;
+}
+
+/**
  * Normal Mode
  *
  * @since 0.1.0
  */
 function normal_mode() {
 	do_action( 'eco_mode_wp_mode_start', 'normal' );
-	$throttler = new RequestThrottler(
-		[
-			// Throttle Recommended PHP Version Checks from Once a Week to Once a Month.
-			new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
+	$throttled_requests = [
+		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month.
+		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
 
-			// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months.
-			new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
-		]
-	);
+		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months.
+		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
+	];
+	$throttler          = new RequestThrottler( filter_requests( $throttled_requests ) );
 
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
@@ -105,15 +127,14 @@ function normal_mode() {
  */
 function developer_mode() {
 	do_action( 'eco_mode_wp_mode_start', 'developer' );
-	$throttler = new RequestThrottler(
-		[
-			// Throttle Recommended PHP Version Checks from Once a Week to Once a Month.
-			new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
+	$throttled_requests = [
+		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month.
+		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
 
-			// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months.
-			new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
-		]
-	);
+		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months.
+		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
+	];
+	$throttler          = new RequestThrottler( filter_requests( $throttled_requests ) );
 
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
@@ -129,3 +150,24 @@ function developer_mode() {
 }
 
 add_action( 'init', __NAMESPACE__ . '\init', 0 );
+
+
+/**
+ * Callback for the WordPress deactivation hook.
+ */
+function do_deactivation_hook():void {
+	$options = Alter_Schedule::get_options();
+
+	if ( empty( $options ) ) {
+		return;
+	}
+
+	foreach ( $options as $option ) {
+		if ( isset( $option['scheduled_action'] ) ) {
+			\wp_clear_scheduled_hook( $option['scheduled_action'] );
+		}
+	}
+
+	\delete_site_option( Alter_Schedule::OPTION_NAME );
+	\delete_option( Alter_Schedule::OPTION_NAME );
+}
