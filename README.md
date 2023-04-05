@@ -11,7 +11,11 @@ Run `npm run start` to run the plugin dashboard settings.
 
 Run `composer cs` to check the CS of the entire codebase. Prefix this with a file path for a specific file.
 
+Run `composer fix-cs` to fix the automatically fixed CS of the entire codebase. Prefix this with a file path for a specific file.
+
 Run `composer test` to run the unit tests.
+
+Run `composer phpstan` to run PHPStan.
 
 ## Features
 
@@ -31,9 +35,11 @@ But in order to maximize potential impact, the plugin also implements a public A
 To reschedule a scheduled event, just call the following line, and replace 'daily' with your desired recurrence. This is an open API and can be used at will.
 This needs to be called prior to the actual register hook.
 
-```\EcoMode\EcoModeWP\Alter_Schedule::reschedule( 'action_name', 'daily' )```
-
+```php
+\EcoMode\EcoModeWP\Alter_Schedule::reschedule( 'action_name', 'daily' )
 ```
+
+```php
 add_action(
 	'plugins_loaded',
 	function () {
@@ -47,7 +53,7 @@ add_action(
 
 The goal of this feature is to be able to provide hosts, web owners, etc. a public API to throttle specific external requests themselves, according to their site's specific needs and requirements:
 
-```
+```php
 add_filter(
     'eco_mode_wp_throttled_requests',
     function ( $throttledRequests ) {
@@ -70,7 +76,7 @@ We take an opinionated approach to disabling core features that most users aren'
 
 To reactivate the News &amp; Events Widget, you can use the following filter:
 
-```
+```php
 add_filter( 'eco_mode_disable_wordpress_news_events_widget', '__return_false' );
 ```
 

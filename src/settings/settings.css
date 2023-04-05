@@ -79,7 +79,7 @@
 
     &__table-body-row{
         display: flex;
-        align-items: center;
+        align-items: stretch;
         border-bottom: 1px solid var(--border-color);
         margin-left: -1px;
     }
