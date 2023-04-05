@@ -4,8 +4,8 @@
  *
  * Plugin Name:  Eco Mode WP
  * Version:      0.1.0
- * Description:  A Cloudfest Hackathon project.
- * Author:       Multiple
+ * Description:  Reduce the carbon footprint of your website by intelligently preventing unnecessary web-requests and background tasks.
+ * Author:       Team Eco-Mode
  * Text Domain:  eco-mode
  * Requires PHP: 7.4
  */
