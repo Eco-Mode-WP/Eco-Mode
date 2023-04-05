@@ -11,7 +11,11 @@ Run `npm run start` to run the plugin dashboard settings.
 
 Run `composer cs` to check the CS of the entire codebase. Prefix this with a file path for a specific file.
 
+Run `composer fix-cs` to fix the automatically fixed CS of the entire codebase. Prefix this with a file path for a specific file.
+
 Run `composer test` to run the unit tests.
+
+Run `composer phpstan` to run PHPStan.
 
 ## Features
 

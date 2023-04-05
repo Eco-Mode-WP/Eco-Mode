@@ -44,18 +44,13 @@ require_once __DIR__ . '/includes/setup-blocks.php';
  * @since 0.1.0
  */
 function init(): void {
-	/**
-	 * How to add actions and filters for lazy loading via Composer
-	 *
-	 * Example: add_action( 'action_handle', [ Dummy
-	 */
 
-	add_action( 'plugins_loaded', [ Dummy::class, 'dummy' ] );
 	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 	add_action( 'admin_init', [ HttpsThrottler::class, 'init' ] );
 
 	\register_deactivation_hook( __FILE__, __NAMESPACE__ . '\do_deactivation_hook' );
+
 
 	/**
 	 * Allows the user to fully customize the Eco Mode, by replacing the mode function by a plugin of your own.

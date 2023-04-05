@@ -5,3 +5,4 @@
 .DS_Store
 .vscode
 phpcs.cache
+/.phpunit.result.cache
