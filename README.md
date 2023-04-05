@@ -5,6 +5,10 @@ Repo for the Eco-Mode project: https://www.cloudfest.com/eco-mode-reduce-outgoin
 
 Run `composer install` to generate the autoloader.
 
+Run `npm install` to install dependencies.
+
+Run `npm run start` to run the plugin dashboard settings.
+
 ## Features
 
 ### Reschedules of actions that perform external requests
