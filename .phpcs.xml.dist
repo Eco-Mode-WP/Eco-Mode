@@ -38,11 +38,14 @@
 	-->
 
 	<!-- Include the WordPress standard. -->
-	<rule ref="WordPress"/>
+	<rule ref="WordPress">
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+	</rule>
 
 	<!-- Add in some extra rules from other standards. -->
 	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
 	<rule ref="Generic.Commenting.Todo"/>
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
 
 	<!--
@@ -64,16 +67,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="my-textdomain"/>
-				<element value="library-textdomain"/>
-			</property>
-		</properties>
-	</rule>
-
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
-		<properties>
-			<property name="prefixes" type="array">
-				<element value="my_prefix"/>
+				<element value="eco-mode"/>
 			</property>
 		</properties>
 	</rule>
