@@ -9,6 +9,8 @@ Run `npm install` to install dependencies.
 
 Run `npm run start` to run the plugin dashboard settings.
 
+Run `composer cs` to check the CS of the entire codebase. Prefix this with a file path for a specific file.
+
 ## Features
 
 ### Reschedules of actions that perform external requests
