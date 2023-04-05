@@ -9,6 +9,10 @@ Run `npm install` to install dependencies.
 
 Run `npm run start` to run the plugin dashboard settings.
 
+## Tests
+
+Run `composer test` to run the unit tests.
+
 ## Features
 
 ### Reschedules of actions that perform external requests
@@ -64,8 +68,4 @@ In the plugin's admin setting page, the plugin has:
 * a list of external requests whose frequency the web owner can tweak
 
 Those frontend features are currently implemented, but hardcodedly so they don't carry any dynamic functionality yet.
-
-## Tests
-
-You can run the unit tests by executing `composer test`
 
