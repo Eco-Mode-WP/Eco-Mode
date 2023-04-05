@@ -39,7 +39,7 @@
             "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
         ],
         "test": [
-            "@php ./vendor/bin/phpunit tests"
+            "@php ./vendor/bin/phpunit"
         ]
     },
     "config": {
