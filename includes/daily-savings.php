@@ -1,6 +1,6 @@
 <?php
 /**
- * Manages daily outgoing requests.
+ * Manages daily-based requests tracking.
  *
  * @package Eco-Mode
  */
