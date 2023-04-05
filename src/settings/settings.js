@@ -1,34 +1,52 @@
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
-import { PanelBody } from '@wordpress/components';
-import { render, useState, useCallback } from '@wordpress/element';
+import { __ } from "@wordpress/i18n";
+import { PanelBody, ToggleControl } from "@wordpress/components";
+import { render, useState, useCallback } from "@wordpress/element";
 /**
  * Internal dependencies
  */
-import useEcoModeData from './components/data';
-import EcoModePerDayChart from './components/EcoModePerDayChart';
-import EcoModePerMonthChart from './components/EcoModePerMonthChart';
-import RequestList from './components/RequestList';
+import EcoModePerDayChart from "./components/EcoModePerDayChart";
+import EcoModePerMonthChart from "./components/EcoModePerMonthChart";
+import RequestList from "./components/RequestList";
 
 const Settings = () => {
 	const [timeSpanFilter, setTimeSpanFilter] = useState('Day');
 	const [active, setActive] = useState('filter-one');
+	const [ ecoModeData, setEcoModeData ] = useState( window.EcoModeSettings );
 
 	const handleFilter = useCallback((event) => {
 		setTimeSpanFilter(event.target.value);
 		setActive(event.target.id);
 	}, []);
 
-	const ecoModeData = useEcoModeData();
+	const handleDisableWordPressNewsEventsWidget = useCallback(
+		( value ) => {
+			setEcoModeData( data => ( { ...data, disableWordPressNewsEventsWidget: value } ) );
+			jQuery.ajax(
+				{
+					type: "post",
+					dataType: "json",
+					url: window.ajaxurl,
+					data: {
+						action: "eco_mode_disable_wordpress_news_events_widget_default",
+						value,
+						_ajax_nonce: ecoModeData?.disableWordPressNewsEventsWidgetNonce,
+					},
+				},
+			);
+		},
+		[ecoModeData],
+	);
+
 	// Get data.
 	// console.log(ecoModeData);
 	//ecoModeData?.file_mods?.prevented_requests
 
 	return (
 		<>
-			<PanelBody initialOpen={true} title={__('Eco Mode usage')}>
+			<PanelBody initialOpen={ true } title={ __( "Eco Mode usage" ) }>
 				<div className="eco-mode__filter">
 					<span>Filter:</span>
 					<input
@@ -65,8 +83,15 @@ const Settings = () => {
 					</div>
 				</div>
 			</PanelBody>
-			<PanelBody initialOpen={false} title={__('Request List')}>
-				<RequestList requests={ecoModeData.requests} />
+			<PanelBody initialOpen={ false } title={ __( "Request List", "eco-mode" ) }>
+				<RequestList requests={ ecoModeData.requests } />
+			</PanelBody>
+			<PanelBody initialOpen={ true } title={ __( "Settings", "eco-mode" ) }>
+				<ToggleControl
+					checked={ ecoModeData?.disableWordPressNewsEventsWidget || false }
+					label={ __( "Disable WordPress news events widget", "eco-mode" ) }
+					onChange={ handleDisableWordPressNewsEventsWidget }
+				/>
 			</PanelBody>
 		</>
 	);

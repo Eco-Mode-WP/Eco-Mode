@@ -46,7 +46,7 @@ require_once __DIR__ . '/includes/setup-blocks.php';
 function init(): void {
 
 	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
-	add_action( 'admin_init', [ Disable_Dashboard_Widgets::class, 'init' ] );
+	add_action( 'admin_init', [ Disable_WordPress_News_Events_Widget::class, 'init' ] );
 	add_action( 'admin_init', [ Https_Throttler::class, 'init' ] );
 
 	\register_deactivation_hook( __FILE__, __NAMESPACE__ . '\do_deactivation_hook' );
@@ -164,4 +164,5 @@ function do_deactivation_hook(): void {
 
 	\delete_site_option( Alter_Schedule::OPTION_NAME );
 	\delete_option( Alter_Schedule::OPTION_NAME );
+	\do_action( 'eco_mode_deactivate' );
 }
