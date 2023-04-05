@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -16,15 +19,15 @@ ChartJS.register(
 	BarElement,
 	Title,
 	Tooltip,
-	Legend
+	Legend,
 );
 
 export const options = {
 	responsive: true,
 	scale: {
 		ticks: {
-			stepSize: 0.2
-		}
+			stepSize: 0.2,
+		},
 	},
 	plugins: {
 		legend: {
@@ -37,24 +40,37 @@ export const options = {
 	},
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const labels = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December',
+];
 
 export const data = {
 	labels,
 	datasets: [
 		{
 			label: 'Initial',
-			data: labels.map(() => faker.datatype.number({ min:3, max: 3 })),
+			data: labels.map(() => faker.datatype.number({ min: 3, max: 3 })),
 			backgroundColor: '#f87171',
 		},
 		{
 			label: 'Saved ',
-			data: labels.map(() => faker.datatype.number({ min:2, max: 2 })),
+			data: labels.map(() => faker.datatype.number({ min: 2, max: 2 })),
 			backgroundColor: '#34d399',
 		},
 	],
 };
 
 export default function EcoModePerMonthChart() {
-	return <Bar options={ options } data={ data } />;
+	return <Bar options={options} data={data} />;
 }

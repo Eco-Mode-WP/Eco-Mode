@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -16,15 +19,15 @@ ChartJS.register(
 	BarElement,
 	Title,
 	Tooltip,
-	Legend
+	Legend,
 );
 
 export const options = {
 	responsive: true,
 	scale: {
 		ticks: {
-			stepSize: 0.2
-		}
+			stepSize: 0.2,
+		},
 	},
 	plugins: {
 		legend: {
@@ -37,24 +40,36 @@ export const options = {
 	},
 };
 
-const labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const labels = [
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday',
+	'Sunday',
+];
 
 export const data = {
 	labels,
 	datasets: [
 		{
 			label: 'Initial',
-			data: labels.map(() => faker.datatype.number({ min:2.0, max: 2.0 })),
+			data: labels.map(() =>
+				faker.datatype.number({ min: 2.0, max: 2.0 }),
+			),
 			backgroundColor: '#f87171',
 		},
 		{
 			label: 'Saved ',
-			data: labels.map(() => faker.datatype.number({ min:0.2, max: 0.2 })),
+			data: labels.map(() =>
+				faker.datatype.number({ min: 0.2, max: 0.2 }),
+			),
 			backgroundColor: '#34d399',
 		},
 	],
 };
 
 export default function EcoModePerDayChart() {
-	return <Bar options={ options } data={ data } />;
+	return <Bar options={options} data={data} />;
 }

@@ -49,7 +49,7 @@ export default function RequestList(props) {
 
 	const rows = props.requests
 		.filter((request) => !request.post_title.includes('wp-cron'))
-		.map((request) => {
+		.map((request, index) => {
 			const aggregate = request.history.reduce(
 				(summary, event) => {
 					summary.total++;
@@ -76,7 +76,7 @@ export default function RequestList(props) {
 			);
 
 			return (
-				<div className="eco-mode__table-body-row">
+				<div className="eco-mode__table-body-row" key={index}>
 					<div className="eco-mode__table-column url">
 						{request.post_title
 							.replace('GET_', 'GET - ')

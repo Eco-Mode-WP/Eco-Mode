@@ -4,11 +4,14 @@
 /**
  * WordPress dependencies
  */
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useMemo } from '@wordpress/element';
 
 function useEcoModeData() {
 	const [ecoModeData, setEcoModeData] = useState({});
-	const data = window.EcoModeSettings || {};
+	const data = useMemo(
+		() => window.EcoModeSettings || {},
+		[window.EcoModeSettings],
+	);
 
 	useEffect(() => {
 		if (data) {
