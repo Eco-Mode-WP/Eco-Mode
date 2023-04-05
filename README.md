@@ -9,7 +9,7 @@ Run `npm install` to install dependencies.
 
 Run `npm run start` to run the plugin dashboard settings.
 
-## Tests
+Run `composer cs` to check the CS of the entire codebase. Prefix this with a file path for a specific file.
 
 Run `composer test` to run the unit tests.
 
@@ -62,10 +62,21 @@ add_filter(
 );
 ```
 
+### Disabling unnecessary core features
+
+We take an opinionated approach to disabling core features that most users aren't actually using. One of these is the News &amp; Events Widget on the dashboard, which sends requests each day to pull in new data.
+
+**Public API**
+
+To reactivate the News &amp; Events Widget, you can use the following filter:
+
+```
+add_filter( 'eco_mode_disable_wordpress_news_events_widget', '__return_false' );
+```
+
 ### Settings & Chart
 In the plugin's admin setting page, the plugin has:
 * a graph that helps provide information to web owners about the amount of scheduled external requests the website is currently saving
 * a list of external requests whose frequency the web owner can tweak
 
 Those frontend features are currently implemented, but hardcodedly so they don't carry any dynamic functionality yet.
-
