@@ -43,7 +43,7 @@ The goal of this feature is to be able to provide hosts, web owners, etc. a publ
 add_filter(
     'eco_mode_wp_throttled_requests',
     function ( $throttledRequests ) {
-        $throttledRequests[] = new EcoMode\EcoModeWP\ThrottledRequest(
+        $throttledRequests[] = new \EcoMode\EcoModeWP\ThrottledRequest(
             'https://some.spammy.plugin/ping',
             MONTH_IN_SECONDS,
             'GET'
