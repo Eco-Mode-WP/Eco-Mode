@@ -49,9 +49,9 @@ function init(): void {
 	add_action( 'admin_init', [ Version_Check_Throttles::class, 'init' ] );
 	add_action( 'admin_init', [ DisableDashboardWidgets::class, 'init' ] );
 	add_action( 'admin_init', [ HttpsThrottler::class, 'init' ] );
-
+  
 	\register_deactivation_hook( __FILE__,  __NAMESPACE__ . '\do_deactivation_hook' );
-
+  
 	/**
 	 * Allows the user to fully customize the Eco Mode, by replacing the mode function by a plugin of your own.
 	 *
@@ -66,15 +66,25 @@ function init(): void {
 	call_user_func( apply_filters( 'eco_mode_wp_select_mode', __NAMESPACE__ . '\normal_mode' ) );
 }
 
+function filter_requests( array $throttled_requests ): array {
+	$throttled_requests = (array) \apply_filters( 'eco_mode_wp_throttled_requests', $throttled_requests );
+	$throttled_requests = \array_filter( $throttled_requests, function ( $throttled_request ) {
+		return is_a( $throttled_request, ThrottledRequest::class );
+	} );
+
+	return $throttled_requests;
+}
+
 function normal_mode() {
 	do_action( 'eco_mode_wp_mode_start', 'normal' );
-	$throttler = new RequestThrottler( [
+	$throttled_requests = [
 		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
 		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
 
 		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months
 		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
-	] );
+	];
+	$throttler          = new RequestThrottler( filter_requests( $throttled_requests ) );
 
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
@@ -91,13 +101,14 @@ function normal_mode() {
 
 function developer_mode() {
 	do_action( 'eco_mode_wp_mode_start', 'developer' );
-	$throttler = new RequestThrottler( [
+	$throttled_requests = [
 		// Throttle Recommended PHP Version Checks from Once a Week to Once a Month
 		new ThrottledRequest( 'http://api.wordpress.org/core/serve-happy/1.0/', \MONTH_IN_SECONDS, 'GET' ),
 
 		// Throttle Recommended Browser Version Checks from Once a Week to Once every 3 Months
 		new ThrottledRequest( 'http://api.wordpress.org/core/browse-happy/1.1/', 3 * \MONTH_IN_SECONDS, 'GET' ),
-	] );
+	];
+	$throttler          = new RequestThrottler( filter_requests( $throttled_requests ) );
 
 	add_filter( 'pre_http_request', [ $throttler, 'throttle_request' ], 10, 3 );
 	add_filter( 'http_response', [ $throttler, 'cache_response' ], 10, 3 );
