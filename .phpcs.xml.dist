@@ -29,8 +29,6 @@
 	<!-- Cache the results between runs. -->
 	<arg name="cache" value="phpcs.cache"/>
 
-	<config name="installed_paths" value="vendor/wp-coding-standards/wpcs" />
-
 	<!--
 	#############################################################################
 	SET UP THE RULESETS
@@ -49,6 +47,17 @@
 	<rule ref="Generic.Commenting.Todo"/>
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
+	<!--Overwrite WordPress' filename rule with something PSR-4 compatible -->
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+		<properties>
+			<property name="rootNamespaces" type="array">
+				<element key="includes" value="EcoMode\EcoModeWP"/>
+			</property>
+		</properties>
+	</rule>
 
 	<!--
 	#############################################################################
