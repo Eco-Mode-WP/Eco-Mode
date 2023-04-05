@@ -85,6 +85,9 @@ function normal_mode() {
 	add_filter( 'http_request_args', [ $outgoing_requests, 'start_request_timer' ] );
   add_action( 'http_api_debug', [ $outgoing_requests, 'capture_request' ], 10, 5 );
 
+	// Clean up old plugin data on a regular basis
+	add_action( 'admin_init', [ CleanupPluginData::class, 'init' ] );
+
 	do_action( 'eco_mode_wp_mode_end', 'normal' );
 }
 
@@ -107,6 +110,9 @@ function developer_mode() {
 	add_action( 'init', [ $outgoing_requests, 'register_post_type' ] );
 	add_filter( 'http_request_args', [ $outgoing_requests, 'start_request_timer' ] );
   add_action( 'http_api_debug', [ $outgoing_requests, 'capture_request' ], 10, 5 );
+
+	// Clean up old plugin data on a regular basis
+	add_action( 'admin_init', [ CleanupPluginData::class, 'init' ] );
 
 	do_action( 'eco_mode_wp_mode_end', 'developer' );
 }
