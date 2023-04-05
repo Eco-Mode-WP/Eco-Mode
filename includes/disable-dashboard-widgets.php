@@ -7,7 +7,10 @@ namespace EcoMode\EcoModeWP;
 class DisableDashboardWidgets {
 
 	public static function init(): void {
-		// TODO: make this optional through a setting
-		remove_meta_box('dashboard_primary', 'dashboard', 'normal'); // Removes the 'WordPress News' widget
+
+		if (apply_filters('eco_mode_disable_wordpress_news_events_widget', true)) {
+			remove_meta_box('dashboard_primary', 'dashboard', 'normal'); // Removes the 'WordPress News' widget
+		}
+
 	}
 }
