@@ -16,13 +16,10 @@ const Settings = () => {
 	const [timeSpanFilter, setTimeSpanFilter] = useState('Day');
 	const [active, setActive] = useState('filter-one');
 
-	const handleFilter = useCallback(
-		(event) => {
-			setTimeSpanFilter(event.target.value);
-			setActive(event.target.id);
-		},
-		[timeSpanFilter],
-	);
+	const handleFilter = useCallback((event) => {
+		setTimeSpanFilter(event.target.value);
+		setActive(event.target.id);
+	}, []);
 
 	const ecoModeData = useEcoModeData();
 	// Get data.
