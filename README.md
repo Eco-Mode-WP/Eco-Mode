@@ -63,5 +63,9 @@ In the plugin's admin setting page, the plugin has:
 * a graph that helps provide information to web owners about the amount of scheduled external requests the website is currently saving
 * a list of external requests whose frequency the web owner can tweak
 
-Those frontend features are currently implemented, but hardcodedly so they don't carry any dynamic functionality yet. 
+Those frontend features are currently implemented, but hardcodedly so they don't carry any dynamic functionality yet.
+
+## Tests
+
+You can run the unit tests by executing `composer test`
 
