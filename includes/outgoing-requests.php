@@ -5,7 +5,7 @@ namespace EcoMode\EcoModeWP;
 /**
  * Class OutgoingRequests
  */
-class OutgoingRequests {
+class Outgoing_Requests {
 	const POST_TYPE = 'EM-outgoing-requests';
 
 	/**

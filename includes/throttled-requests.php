@@ -10,7 +10,7 @@ namespace EcoMode\EcoModeWP;
 /**
  * ThrottledRequest class.
  */
-class ThrottledRequest {
+class Throttled_Request {
 
 	/**
 	 * The URL of the request.

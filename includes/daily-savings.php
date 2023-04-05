@@ -10,7 +10,7 @@ namespace EcoMode\EcoModeWP;
 /**
  * DailySavings class.
  */
-class DailySavings {
+class Daily_Savings {
 	const POST_TYPE = 'EM-daily-savings';
 
 	/**
@@ -30,9 +30,9 @@ class DailySavings {
 	/**
 	 * Tracks an outgoing request by updating its total_outgoing_requests value.
 	 *
-	 * @param ThrottledRequest $request The request to track.
+	 * @param Throttled_Request $request The request to track.
 	 */
-	public static function track_outgoing_request( ThrottledRequest $request ) {
+	public static function track_outgoing_request( Throttled_Request $request ) {
 		$post_id   = self::get_todays_savings();
 		$old_count = (int) \get_post_meta( $post_id, 'total_outgoing_requests', true );
 		\update_post_meta( $post_id, 'total_outgoing_requests', ++$old_count );
@@ -43,9 +43,9 @@ class DailySavings {
 	/**
 	 * Tracks an outgoing request by updating its total_prevent_requests value.
 	 *
-	 * @param ThrottledRequest $request The request to track.
+	 * @param Throttled_Request $request The request to track.
 	 */
-	public static function track_prevented_request( ThrottledRequest $request ) {
+	public static function track_prevented_request( Throttled_Request $request ) {
 		$post_id   = self::get_todays_savings();
 		$old_count = (int) \get_post_meta( $post_id, 'total_prevent_requests', true );
 		\update_post_meta( $post_id, 'total_prevent_requests', ++$old_count );

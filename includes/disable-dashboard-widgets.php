@@ -4,7 +4,7 @@ namespace EcoMode\EcoModeWP;
 /**
  * Class to disable some dashboard widgets for saving requests
  */
-class DisableDashboardWidgets {
+class Disable_Dashboard_Widgets {
 
 	public static function init(): void {
 

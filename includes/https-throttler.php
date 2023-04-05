@@ -10,7 +10,7 @@ namespace EcoMode\EcoModeWP;
 /**
  * Https alteration class.
  */
-class HttpsThrottler {
+class Https_Throttler {
 	const NAME             = 'https_mods';
 	const SCHEDULED_ACTION = 'wp_https_detection';
 
