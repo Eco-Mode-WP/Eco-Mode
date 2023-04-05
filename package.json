@@ -19,7 +19,6 @@
 	},
 	"devDependencies": {
 		"@dekode/stylelint-config": "1.0.2",
-		"@wordpress/eslint-plugin": "13.0.0",
 		"@wordpress/scripts": "^25.3.0",
 		"classnames": "^2.3.1",
 		"cssnano": "5.1.14",
