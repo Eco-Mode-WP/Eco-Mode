@@ -3,7 +3,7 @@ The Eco-Mode plugin reduces the carbon footprint of your WordPress website by in
 Out of the box it:
 - Reduces the frequency of WordPress version check requests.
 - Disables the WP news dashboard widget.
-- Reduces the frequency of the https detection.
+- Reduces the frequency of the https detection check.
 - Reduces the frequency of PHP and browser version checks.
 
 ## Setup
