@@ -67,7 +67,7 @@ We take an opinionated approach to disabling core features that most users aren'
 To reactivate the News &amp; Events Widget, you can use the following filter:
 
 ```
-add_filter('eco_mode_disable_wordpress_news_events_widget', __return_true);
+add_filter( 'eco_mode_disable_wordpress_news_events_widget', '__return_false' );
 ```
 
 ### Settings & Chart
