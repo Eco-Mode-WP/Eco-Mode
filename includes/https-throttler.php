@@ -7,8 +7,6 @@
 
 namespace EcoMode\EcoModeWP;
 
-use WP_Error;
-
 /**
  * Https alteration class.
  */
