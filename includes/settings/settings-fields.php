@@ -9,7 +9,7 @@ declare( strict_types=1 );
 
 namespace EcoMode\Settings\Fields;
 
-use EcoMode\EcoModeWP\OutgoingRequests;
+use EcoMode\EcoModeWP\Outgoing_Requests;
 
 add_action( 'init', __NAMESPACE__ . '\\register_plugin_settings', 10 );
 
@@ -41,7 +41,7 @@ function get_custom_eco_mode_data(): array {
 	$data = [
 		'custom_eco_mode_data' => [],
 		'daily_savings'        => [],
-		'requests'             => OutgoingRequests::get_data(),
+		'requests'             => Outgoing_Requests::get_data(),
 	];
 
 	// Get prevented requests data.
@@ -77,8 +77,6 @@ function get_custom_eco_mode_data(): array {
 			];
 
 		}
-	} else {
-		// no posts found
 	}
 
 	return $data;

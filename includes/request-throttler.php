@@ -4,12 +4,12 @@ namespace EcoMode\EcoModeWP;
 
 use WP_Error;
 
-class RequestThrottler {
+class Request_Throttler {
 
 	private array $throttled_requests;
 
 	/**
-	 * @param ThrottledRequest[] $throttled_requests
+	 * @param Throttled_Request[] $throttled_requests
 	 */
 	public function __construct( array $throttled_requests ) {
 		$this->throttled_requests = \array_reduce(
@@ -53,12 +53,12 @@ class RequestThrottler {
 		$cache = \get_transient( $this->get_cache_key( $throttled_request, $parsed_args ) );
 
 		if ( ! $cache ) {
-			DailySavings::track_outgoing_request( $throttled_request );
+			Daily_Savings::track_outgoing_request( $throttled_request );
 
 			return $response;
 		}
 
-		DailySavings::track_prevented_request( $throttled_request );
+		Daily_Savings::track_prevented_request( $throttled_request );
 
 		return $cache;
 	}
@@ -106,7 +106,7 @@ class RequestThrottler {
 	}
 
 
-	private function get_cache_key( ThrottledRequest $throttled_request, $parsed_args ): string {
+	private function get_cache_key( Throttled_Request $throttled_request, $parsed_args ): string {
 		$relevant_args = [
 			'method'              => $parsed_args['method'],
 			'timeout'             => $parsed_args['timeout'],

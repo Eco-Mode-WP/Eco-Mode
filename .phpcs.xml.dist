@@ -40,6 +40,8 @@
 	<!-- Include the WordPress standard. -->
 	<rule ref="WordPress">
 		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+		<exclude name="WordPress.PHP.YodaConditions"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 	</rule>
 
 	<!-- Add in some extra rules from other standards. -->

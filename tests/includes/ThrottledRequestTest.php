@@ -2,7 +2,7 @@
 
 namespace EcoMode\EcoModeWP\Tests\Includes;
 
-use EcoMode\EcoModeWP\ThrottledRequest;
+use EcoMode\EcoModeWP\Throttled_Request;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,7 +23,7 @@ final class ThrottledRequestTest extends TestCase
 		$url = "https://example.org";
 		$max_frequency_in_seconds = 10;
 
-		$actual = new ThrottledRequest( $url, $max_frequency_in_seconds );
+		$actual = new Throttled_Request( $url, $max_frequency_in_seconds );
 
 		$this->assertSame( $actual->method, "GET" );
 	}
