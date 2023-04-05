@@ -76,6 +76,12 @@ jobs:
                     composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
                     echo "vendor/bin" >> $GITHUB_PATH
 
+            -   name: Check coding standards - JavaScript
+                run: npm run lint:js
+
+            -   name: Check coding standards - CSS
+                run: npm run lint:css
+
             -   name: 📂 Sync files to eco-mode.confstack.com
                 if: ${{ github.ref == 'refs/heads/main' }}
                 uses: SamKirkland/FTP-Deploy-Action@4.3.3
