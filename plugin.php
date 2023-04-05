@@ -51,7 +51,6 @@ function init(): void {
 
 	\register_deactivation_hook( __FILE__, __NAMESPACE__ . '\do_deactivation_hook' );
 
-
 	/**
 	 * Allows the user to fully customize the Eco Mode, by replacing the mode function by a plugin of your own.
 	 *
@@ -150,7 +149,7 @@ add_action( 'init', __NAMESPACE__ . '\init', 0 );
 /**
  * Callback for the WordPress deactivation hook.
  */
-function do_deactivation_hook():void {
+function do_deactivation_hook(): void {
 	$options = Alter_Schedule::get_options();
 
 	if ( empty( $options ) ) {
