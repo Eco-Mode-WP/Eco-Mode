@@ -4,9 +4,9 @@
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"autoload": {
-		"classmap": [
-			"includes/"
-		]
+		"psr-4": {
+			"EcoMode\\EcoModeWP\\": "includes/"
+		}
 	},
 	"authors": [
 		{
