@@ -50,7 +50,9 @@ function settings_assets(): void {
 	/**
 	 * Make settings available to the settings page
 	 */
-	\wp_localize_script( 'eco-mode-plugin-script', 'EcoModeSettings',
+	\wp_localize_script(
+		'eco-mode-plugin-script',
+		'EcoModeSettings',
 		get_custom_eco_mode_data()
 	);
 }
@@ -61,8 +63,8 @@ function settings_assets(): void {
 function add_settings_page(): void {
 	$page_hook_suffix = add_submenu_page(
 		'options-general.php',
-		__('Eco Mode Settings','eco-mode'),
-		__('Eco Mode Settings','eco-mode'),
+		__( 'Eco Mode Settings', 'eco-mode' ),
+		__( 'Eco Mode Settings', 'eco-mode' ),
 		'manage_options',
 		'eco_mode_settings',
 		__NAMESPACE__ . '\\settings_page'
