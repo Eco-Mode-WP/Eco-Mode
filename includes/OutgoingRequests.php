@@ -107,6 +107,8 @@ class OutgoingRequests {
 		];
 		self::update_post_metas($request_post, $data);
 
+		do_action( 'eco_mode_outging_request_logged' );
+
     }
 
 	public static function update_post_metas($request_post, $data) {
