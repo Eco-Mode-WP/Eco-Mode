@@ -41,11 +41,11 @@ class CleanupPluginData {
 		// Do cleanup
 		if ($strategy === 'purge_amount') {
 			$purge_amount = self::get_amount_of_entries_to_purge();
-			self::delete_oldest_log_entries($purge_amount);
+			self::delete_oldest_log_entries_by_amount($purge_amount);
 		}
-		if ($strategy === 'max_age') {
+		if ($strategy === 'purge_max_age') {
 			$purge_max_age = self::get_max_age_of_entries_to_purge();
-
+			self::delete_oldest_log_entries_by_max_age($purge_max_age);
 		}
 
 		// Save timestamp of this cleanup
@@ -72,13 +72,22 @@ class CleanupPluginData {
 		return $max_age;
 	}
 
-	private static function delete_oldest_log_entries($amount) {
+	private static function delete_oldest_log_entries_by_amount($amount) {
 		if (!isset($amount)) {
 			return;
 		}
 
 		// TODO: We need to order posts by the latest 'timestamp' within the array of 'request_data' within post_meta
 		// How do we do this in a performant manner?
+		// Might the post last updated time be usable? Only if it's updated when doing update_post_meta()...
 
+	}
+
+	private static function delete_oldest_log_entries_by_max_age($max_age) {
+		if (!isset($max_age)) {
+			return;
+		}
+
+		// TODO: determine posts to delete, delete posts
 	}
 }
