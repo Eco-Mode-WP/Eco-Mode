@@ -29,6 +29,9 @@
         "fix-cs": [
             "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
         ],
+		"phpstan": [
+			"@php ./vendor/bin/phpstan analyse"
+		],
         "post-install-cmd": [
             "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
         ],
