@@ -10,11 +10,9 @@ class OutgoingRequests {
 
 	private $request_start_time;
 
-    public function __construct() {
-        $this->request_start_time = 0;
-
-
-    }
+	public function __construct() {
+		$this->request_start_time = 0;
+	}
 
 	public static function register_post_type() {
 		\register_post_type( self::POST_TYPE,
@@ -51,9 +49,9 @@ class OutgoingRequests {
 		$request_posts = get_posts( [ 'post_type' => self::POST_TYPE, 'posts_per_page'=>15 ] );
 
 		return array_map( function ( $request_post ) {
-			$response_data            = (array) $request_post;
-			$response_data['history'] = \get_post_meta( $request_post->ID, 'request_data', false );
-			$response_data['is_enabled'] = \get_post_meta( $request_post->ID, 'is_enabled', true );
+			$response_data                             = (array) $request_post;
+			$response_data['history']                  = \get_post_meta( $request_post->ID, 'request_data', false );
+			$response_data['is_enabled']               = \get_post_meta( $request_post->ID, 'is_enabled', true );
 			$response_data['max_frequency_in_seconds'] = \get_post_meta( $request_post->ID, 'max_frequency_in_seconds', true );
 
 			return $response_data;
