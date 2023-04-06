@@ -45,7 +45,9 @@
 	</rule>
 
 	<!-- Add in some extra rules from other standards. -->
-	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed"/>
+	</rule>
 	<rule ref="Generic.Commenting.Todo"/>
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
