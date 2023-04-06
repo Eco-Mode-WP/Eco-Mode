@@ -4,9 +4,9 @@
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"autoload": {
-		"classmap": [
-			"includes/"
-		]
+		"psr-4": {
+			"EcoMode\\EcoModeWP\\": "includes/"
+		}
 	},
 	"authors": [
 		{
@@ -20,7 +20,8 @@
 		"wp-coding-standards/wpcs": "^2.3",
 		"phpstan/phpstan": "^1.10",
 		"szepeviktor/phpstan-wordpress": "^1.1",
-		"phpstan/extension-installer": "^1.2"
+		"phpstan/extension-installer": "^1.2",
+		"slevomat/coding-standard": "^8.9"
 	},
 	"scripts": {
 		"cs": [
@@ -32,22 +33,17 @@
 		"phpstan": [
 			"@php ./vendor/bin/phpstan analyse"
 		],
-		"post-install-cmd": [
-			"\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
-		],
-		"post-update-cmd": [
-			"\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
-		],
 		"test": [
 			"@php ./vendor/bin/phpunit"
 		]
 	},
 	"config": {
 		"platform": {
-			"php": ">=7.4"
+			"php": "7.4"
 		},
 		"allow-plugins": {
-			"phpstan/extension-installer": true
+			"phpstan/extension-installer": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	}
 }
