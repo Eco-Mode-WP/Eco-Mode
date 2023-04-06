@@ -36,7 +36,7 @@ class Version_Check_Throttles {
 	}
 
 	/**
-	 * Checks if WordPress is outdated.
+	 * Check if the current WordPress install is known to be outdated.
 	 *
 	 * @return bool
 	 */

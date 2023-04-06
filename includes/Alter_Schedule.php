@@ -8,19 +8,21 @@
 namespace EcoMode\EcoModeWP;
 
 /**
- * Dummy class to show the idea of autoloading.
+ * Persistently alter the schedule of WP_Cron events.
  */
 class Alter_Schedule {
 	public const OPTION_NAME = 'eco_mode_registered_alteration';
 
 	/**
-	 * Registers the scheduled action.
+	 * Register a persistent change in the schedule of a WP_Cron event.
 	 *
-	 * @param string $name             The name of the scheduled action.
-	 * @param bool   $condition        The condition to register the scheduled action.
-	 * @param string $scheduled_action The name of the scheduled action.
-	 * @param string $schedule         The schedule of the scheduled action.
-	 * @param string $request_url      The request url of the scheduled action.
+	 * @param string       $name             A unique description of this alteration.
+	 * @param bool         $condition        Whether to schedule the change (true) or undo the alteration (false).
+	 * @param string       $scheduled_action The name of the event to reschedule.
+	 * @param string|false $schedule         The new schedule name or false to disable. e.g. daily. See wp_get_schedules() for accepted values.
+	 * @param string       $request_url      The url of the request that is being prevented by this alteration.
+	 *
+	 * @return void
 	 */
 	public static function register_alteration( $name, $condition, $scheduled_action, $schedule, $request_url ) {
 		$registered_alternation = get_site_option( self::OPTION_NAME );
@@ -65,9 +67,11 @@ class Alter_Schedule {
 	 * Sets the option in the database.
 	 *
 	 * @param string $name The name of the option.
-	 * @param array  $args The arguments for the option.
+	 * @param array  $args The value to use.
+	 *
+	 * @return void
 	 */
-	private static function set_option( $name, array $args ) {
+	private static function set_option( string $name, array $args ) {
 		$option = get_site_option( self::OPTION_NAME, [] );
 
 		$option[ $name ] = $args;
@@ -89,9 +93,11 @@ class Alter_Schedule {
 	}
 
 	/**
-	 * Removes the option in the database.
+	 * Removes the option in the database if it was set.
 	 *
 	 * @param string $name The name of the option.
+	 *
+	 * @return void
 	 */
 	private static function remove_option( $name ) {
 		$option = get_site_option( self::OPTION_NAME, [] );
@@ -109,12 +115,12 @@ class Alter_Schedule {
 	}
 
 	/**
-	 * Gets the prevented requests per day.
+	 * Calculates the number of requests saved every day between two cron schedules, assuming that one request is sent in the cron.
 	 *
-	 * @param string $original The original schedule.
-	 * @param string $new      The new schedule.
+	 * @param string $original The name of the original cron schedule before throttling.
+	 * @param string $new      The name of the cron schedule after throttling.
 	 *
-	 * @return int|false
+	 * @return false|float The number of prevented request per day. False if the schedule is not known and calculation fails.
 	 */
 	private static function get_prevented_request_per_day( $original, $new ) {
 		$preset = [

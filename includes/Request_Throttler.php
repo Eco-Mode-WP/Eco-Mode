@@ -10,12 +10,12 @@ namespace EcoMode\EcoModeWP;
 use WP_Error;
 
 /**
- * Class Request_Throttler
+ * Limits the rate of which requests get sent out by caching the last known response for the configured duration.
  */
 class Request_Throttler {
 
 	/**
-	 * The throttled requests.
+	 * The full list of requests to throttle, keyed by the url for fast lookups.
 	 *
 	 * @var Throttled_Request[]
 	 */
@@ -24,7 +24,7 @@ class Request_Throttler {
 	/**
 	 * Request_Throttler constructor.
 	 *
-	 * @param Throttled_Request[] $throttled_requests The throttled requests.
+	 * @param Throttled_Request[] $throttled_requests The full list of requests to throttle.
 	 */
 	public function __construct( array $throttled_requests ) {
 		$this->throttled_requests = \array_reduce(
@@ -120,15 +120,17 @@ class Request_Throttler {
 		return $response;
 	}
 
+
 	/**
-	 * Gets the cache key for a request.
+	 * Gets a string key that is unique for each combination of request args.
 	 *
 	 * @param Throttled_Request $throttled_request The throttled request.
-	 * @param array             $parsed_args The parsed arguments for the request.
+	 * @param array             $parsed_args       The WP_Http::request args array.
 	 *
-	 * @return string
+	 * @return string The cache key.
+	 * @see WP_Http::request
 	 */
-	private function get_cache_key( Throttled_Request $throttled_request, $parsed_args ): string {
+	private function get_cache_key( Throttled_Request $throttled_request, array $parsed_args ): string {
 		$relevant_args = [
 			'method'              => $parsed_args['method'],
 			'timeout'             => $parsed_args['timeout'],

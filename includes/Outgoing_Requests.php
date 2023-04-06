@@ -2,6 +2,8 @@
 
 namespace EcoMode\EcoModeWP;
 
+use WP_Error;
+
 /**
  * Class OutgoingRequests
  */
@@ -30,10 +32,10 @@ class Outgoing_Requests {
 			self::POST_TYPE,
 			[
 				'supports'     =>
-												[
-													'title',
-													'custom-fields',
-												],
+					[
+						'title',
+						'custom-fields',
+					],
 				'show_in_rest' => true,
 				'public'       => true,
 			]
@@ -104,11 +106,11 @@ class Outgoing_Requests {
 	/**
 	 * Capture the request.
 	 *
-	 * @param array  $response The response.
-	 * @param array  $context The context.
+	 * @param array  $response  The response.
+	 * @param array  $context   The context.
 	 * @param string $transport The transport.
-	 * @param array  $args The args.
-	 * @param string $url The url.
+	 * @param array  $args      The args.
+	 * @param string $url       The url.
 	 *
 	 * @return void
 	 */
@@ -119,13 +121,17 @@ class Outgoing_Requests {
 		}
 
 		if ( is_wp_error( $response ) ) {
-			// WP_Error.
+			/**
+			 * The response is an error response.
+			 *
+			 * @var WP_Error $response
+			 */
 			$response = [
 				'response' =>
-				[
-					'code'    => 999,
-					'message' => $response->get_error_message(),
-				],
+					[
+						'code'    => 999,
+						'message' => $response->get_error_message(),
+					],
 			];
 		}
 
@@ -172,7 +178,7 @@ class Outgoing_Requests {
 	 * Update post meta data.
 	 *
 	 * @param int   $request_post The post ID.
-	 * @param array $data The data to store.
+	 * @param array $data         The data to store.
 	 */
 	public static function update_post_metas( $request_post, $data ) {
 		add_post_meta( $request_post, 'request_data', $data );
