@@ -10,8 +10,8 @@ use PHPUnit\Framework\TestCase;
  *
  * @coversDefaultClass ::ThrottledRequest
  */
-final class ThrottledRequestTest extends TestCase
-{
+final class ThrottledRequestTest extends TestCase {
+
 
 	/**
 	 * Tests that creating a throttled request without setting a method parameter
@@ -20,11 +20,11 @@ final class ThrottledRequestTest extends TestCase
 	 * @return void
 	 */
 	public function test_has_GET_as_default_value(): void {
-		$url = "https://example.org";
+		$url                      = 'https://example.org';
 		$max_frequency_in_seconds = 10;
 
 		$actual = new Throttled_Request( $url, $max_frequency_in_seconds );
 
-		$this->assertSame( $actual->method, "GET" );
+		$this->assertSame( $actual->method, 'GET' );
 	}
 }
