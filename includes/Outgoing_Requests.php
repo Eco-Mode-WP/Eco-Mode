@@ -113,7 +113,7 @@ class Outgoing_Requests {
 	 * @return void
 	 */
 	public function capture_request( $response, $context, $transport, $args, $url ) {
-		$parsed = wp_parse_url( $url );
+		$parsed = \wp_parse_url( $url );
 		if ( ! is_array( $parsed ) ) {
 			$parsed = [];
 		}
