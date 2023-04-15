@@ -1,15 +1,30 @@
 <?php
+/**
+ * The file that defines the Request_Throttler class.
+ *
+ * @package EcoMode
+ */
 
 namespace EcoMode\EcoModeWP;
 
 use WP_Error;
 
+/**
+ * Class Request_Throttler
+ */
 class Request_Throttler {
 
+	/**
+	 * The throttled requests.
+	 *
+	 * @var Throttled_Request[]
+	 */
 	private array $throttled_requests;
 
 	/**
-	 * @param Throttled_Request[] $throttled_requests
+	 * Request_Throttler constructor.
+	 *
+	 * @param Throttled_Request[] $throttled_requests The throttled requests.
 	 */
 	public function __construct( array $throttled_requests ) {
 		$this->throttled_requests = \array_reduce(
@@ -105,7 +120,14 @@ class Request_Throttler {
 		return $response;
 	}
 
-
+	/**
+	 * Gets the cache key for a request.
+	 *
+	 * @param Throttled_Request $throttled_request The throttled request.
+	 * @param array             $parsed_args The parsed arguments for the request.
+	 *
+	 * @return string
+	 */
 	private function get_cache_key( Throttled_Request $throttled_request, $parsed_args ): string {
 		$relevant_args = [
 			'method'              => $parsed_args['method'],
@@ -127,6 +149,6 @@ class Request_Throttler {
 			'limit_response_size' => $parsed_args['limit_response_size'],
 		];
 
-		return 'Eco-mode-wp-' . $throttled_request->method . '-' . $throttled_request->url . '-' . md5( \serialize( $relevant_args ) );
+		return 'Eco-mode-wp-' . $throttled_request->method . '-' . $throttled_request->url . '-' . md5( \maybe_serialize( $relevant_args ) );
 	}
 }
