@@ -16,12 +16,12 @@ namespace EcoMode\Block\Template;
  */
 function template( array $attributes ): string {
 
-	$wrapper_attrs           = [];
+	$wrapper_attrs = [];
 
 	$wrapper_attributes = get_block_wrapper_attributes( $wrapper_attrs );
 
-ob_start();
-?>
+	ob_start();
+	?>
 	<div <?php echo $wrapper_attributes; //phpcs:ignore ?>>
 		Calculate stuff here
 	</div>

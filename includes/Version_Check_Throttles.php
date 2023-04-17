@@ -36,12 +36,11 @@ class Version_Check_Throttles {
 	}
 
 	/**
-	 * Checks if WordPress is outdated.
+	 * Check if the current WordPress install is known to be outdated.
 	 *
 	 * @return bool
 	 */
 	private static function is_wp_outdated() {
-		// Returns false.
 		$current = get_site_transient( 'update_core' );
 
 		if ( ! isset( $current->updates ) || ! is_array( $current->updates ) ) {
