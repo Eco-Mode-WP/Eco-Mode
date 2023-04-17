@@ -110,16 +110,16 @@ class Outgoing_Requests {
 	 * @param array  $args The args.
 	 * @param string $url The url.
 	 *
-	 * @return array
+	 * @return void
 	 */
 	public function capture_request( $response, $context, $transport, $args, $url ) {
-		$parsed = parse_url( $url );
+		$parsed = \wp_parse_url( $url );
 		if ( ! is_array( $parsed ) ) {
 			$parsed = [];
 		}
 
 		if ( is_wp_error( $response ) ) {
-			/** @var WP_Error $response */
+			// WP_Error.
 			$response = [
 				'response' =>
 				[
