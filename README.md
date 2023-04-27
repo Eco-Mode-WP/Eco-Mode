@@ -1,5 +1,10 @@
-Repo for the Eco-Mode project: https://www.cloudfest.com/eco-mode-reduce-outgoing-network-traffic-of-your-wordpress-server
-
+# Eco-Mode
+The Eco-Mode plugin reduces the carbon footprint of your WordPress website by intelligently preventing unnecessary web-requests and background tasks.
+Out of the box it:
+- Reduces the frequency of WordPress version check requests.
+- Disables the WP news dashboard widget.
+- Reduces the frequency of the https detection check.
+- Reduces the frequency of PHP and browser version checks.
 
 ## Setup
 
