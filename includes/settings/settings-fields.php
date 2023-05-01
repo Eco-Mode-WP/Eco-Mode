@@ -79,6 +79,11 @@ function get_custom_eco_mode_data(): array {
 		}
 	}
 
+	$filtered_data = apply_filters( 'eco_mode_settings_data', $data );
+	if ( is_array( $filtered_data ) ) {
+		return $filtered_data;
+	}
+
 	return $data;
 }
 
