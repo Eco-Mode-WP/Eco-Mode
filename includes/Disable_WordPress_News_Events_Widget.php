@@ -1,4 +1,11 @@
 <?php
+/**
+ * Optionally disable the WP News Events dashboard that ships with WordPress core.
+ * The dashboard widgets requests a feed when visiting the wp-admin dashboard.
+ * This is wasteful if the widget is not frequently looked at.
+ *
+ * @package Eco-Mode\WP-Core
+ */
 
 namespace EcoMode\EcoModeWP;
 
