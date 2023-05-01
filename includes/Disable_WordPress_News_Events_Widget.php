@@ -65,6 +65,7 @@ class Disable_WordPress_News_Events_Widget {
 			wp_die( -1, 403 );
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Value only used in strict comparison.
 		$value = wp_unslash( $_POST['value'] ) === 'true';
 		if ( ! self::update_option( $value ) ) {
 			wp_die( -1, 500 );
